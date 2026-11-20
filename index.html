@@ -193,7 +193,7 @@ section{scroll-margin-top:20px}
 </div></section>
 
 <section id="news" class="news"><div class="wrap in">
-  <div class="intro"><p class="eyebrow">News</p><h2 class="h2" style="margin-bottom:18px">Aus dem Viertel</h2><p class="lead" style="margin:0">Baustellen, Sperrungen und kurze Hinweise – knapp und ohne Werbung.</p></div>
+  <div class="intro"><p class="eyebrow">News</p><h2 class="h2" style="margin-bottom:18px">Aus dem Viertel</h2><p class="lead" style="margin:0 0 24px">Baustellen, Sperrungen und kurze Hinweise – knapp und ohne Werbung.</p><button type="button" class="btn btn-red" data-open-form data-cat="News-Hinweis">Hinweis melden</button><p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Wird vor der Veröffentlichung geprüft.</p></div>
   <ul id="news-list" aria-live="polite"><li><span class="c"><span>Lade Meldungen …</span></span></li></ul>
 </div></section>
 
@@ -322,7 +322,7 @@ section{scroll-margin-top:20px}
   }).catch(function(){});
 
   /* Formular */
-  var labels = ["Veranstaltung","Flohmarkt","Treffen","Gesucht","Biete","Zu verschenken","Gefunden","Sonstiges"];
+  var labels = ["News-Hinweis","Veranstaltung","Flohmarkt","Treffen","Gesucht","Biete","Zu verschenken","Gefunden","Sonstiges"];
   document.getElementById("cats").innerHTML = labels.map(function(l,i){
     return '<label><input type="radio" name="kategorie" value="'+l+'"'+(i===0?' checked':'')+'><span>'+l+'</span></label>';
   }).join("");
