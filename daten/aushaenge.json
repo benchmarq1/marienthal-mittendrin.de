@@ -1,0 +1,18 @@
+[
+  {
+    "nr": 1,
+    "kategorie": "Hallo Nachbarn",
+    "titel": "Das Schwarze Brett ist eröffnet!",
+    "text": "Laufpartner, Gassi-Hilfe, Werkzeug zum Leihen oder ein Sofa zu verschenken? Häng deinen Zettel über „Aushang aufhängen“ auf.",
+    "farbe": "gelb",
+    "bis": "2027-01-31"
+  },
+  {
+    "nr": 2,
+    "kategorie": "Gesucht",
+    "titel": "Gastgeber für Türchen 2",
+    "text": "Für den 2. Dezember fehlt noch ein Haus im Adventskalender. Glühwein, Punsch, ein paar Nachbarn – mehr braucht's nicht.",
+    "farbe": "rosa",
+    "bis": "2026-12-01"
+  }
+]
