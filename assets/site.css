@@ -27,3 +27,11 @@ h2{font-weight:700;font-size:24px;margin:40px 0 10px}
 .foot{background:var(--navy);color:#B9C7D6;font-size:14px}
 .foot .wrap{display:flex;flex-wrap:wrap;gap:16px 24px;justify-content:space-between;padding-top:28px;padding-bottom:28px}
 .foot a{color:#DCE4EC}
+@media (max-width:600px){
+  .wrap{padding-left:20px;padding-right:20px}
+  .top .wrap{gap:10px;padding-top:14px;padding-bottom:10px}
+  nav{flex-wrap:nowrap;overflow-x:auto;width:calc(100% + 40px);margin:0 -20px;padding:0 14px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:none;padding:10px 10px}
+  .legal{padding:44px 0 64px}
+}
