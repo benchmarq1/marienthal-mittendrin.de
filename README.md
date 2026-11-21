@@ -19,7 +19,7 @@ Neue Veranstaltung: neuen Ordner anlegen (z. B. `sommerfest/index.html`) und auf
 Beides steht in einfachen Dateien im Ordner `daten/` und lässt sich direkt auf GitHub bearbeiten (Stift-Symbol):
 
 - `daten/news.json` – Felder: `kategorie` (Baustelle, Mitmachen, Neu, Lesetipp …), `titel`, `text`, `datum`, `bis`,
-  optional `link` + `linktext`, `quelle`, `video` + `videotext`. Nach dem Datum `bis` verschwindet die Meldung.
+  optional `link` + `linktext`, `quelle`, `video` + `videotext`, `immerUnten: true` (bleibt am Ende der Liste). Nach dem Datum `bis` verschwindet die Meldung.
 - `daten/aushaenge.json` – Felder: `nr`, `kategorie`, `titel`, `text`, `farbe` (gelb, weiss, rosa, blau), `bis`.
   Keine Namen, Telefonnummern oder Adressen eintragen – Antworten laufen über hallo@marienthal-mittendrin.de.
 

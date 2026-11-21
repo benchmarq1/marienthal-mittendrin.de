@@ -317,7 +317,7 @@ section{scroll-margin-top:20px}
   /* News aus daten/news.json */
   fetch("/daten/news.json", {cache:"no-cache"}).then(function(r){return r.json();}).then(function(list){
     list = list.filter(function(n){ return !n.bis || day(n.bis) >= today; })
-               .sort(function(a,b){ return (b.datum||"").localeCompare(a.datum||""); });
+               .sort(function(a,b){ return (a.immerUnten?1:0)-(b.immerUnten?1:0) || (b.datum||"").localeCompare(a.datum||""); });
     var ul = document.getElementById("news-list");
     if(!list.length){ ul.innerHTML = '<li><span class="c"><span>Gerade gibt es keine Meldungen.</span></span></li>'; return; }
     ul.innerHTML = list.map(function(n){

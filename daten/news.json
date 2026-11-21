@@ -41,5 +41,13 @@
     "quelle": "https://www.wandsbeker-gehoelz.de/",
     "datum": "2026-08-15",
     "bis": "2026-12-31"
+  },
+  {
+    "kategorie": "Lesetipp",
+    "titel": "Gehölznachrichten",
+    "text": "Die Stadtteilzeitung rund ums Wandsbeker Gehölz – mit Neuigkeiten, Terminen und Geschichten aus Marienthal und Wandsbek.",
+    "link": "https://www.gehoelznachrichten.de/",
+    "linktext": "Zu den Gehölznachrichten",
+    "immerUnten": true
   }
 ]
