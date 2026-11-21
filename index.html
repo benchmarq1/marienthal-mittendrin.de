@@ -63,7 +63,7 @@ section{scroll-margin-top:20px}
 .news ul{flex:999 1 560px;min-width:0;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .news li{background:#fff;border-radius:16px;padding:22px 24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
 .badge{flex:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:#E4EEF8;color:var(--navy)}
-.b-Baustelle{background:#FFF1D6;color:#7A4B00}.b-Mitmachen{background:#FDE7EA;color:#A10D25}.b-Neu{background:#E7F2EC;color:#1E5B3E}.b-Lesetipp{background:#F1E9F7;color:#5B2A6B}
+.b-Baustelle{background:#FFF1D6;color:#7A4B00}.b-Mitmachen{background:#FDE7EA;color:#A10D25}.b-Neu{background:#E7F2EC;color:#1E5B3E}.b-Lesetipp{background:#F1E9F7;color:#5B2A6B}.b-Tipp{background:#FFF4D1;color:#7A5300}
 .news .c{flex:1 1 300px;display:flex;flex-direction:column;gap:6px}
 .news .c b{font-weight:600;font-size:18px}
 .news .c span{font-size:15px;color:var(--muted)}
@@ -322,7 +322,7 @@ section{scroll-margin-top:20px}
     if(!list.length){ ul.innerHTML = '<li><span class="c"><span>Gerade gibt es keine Meldungen.</span></span></li>'; return; }
     ul.innerHTML = list.map(function(n){
       var extra = "";
-      if(n.link) extra += ' <a class="cta" href="'+esc(safeUrl(n.link))+'">'+esc(n.linktext||"Mehr")+'</a>';
+      if(n.link) extra += ' <a class="cta" href="'+esc(safeUrl(n.link))+'"'+(/^https?:/.test(n.link)?' rel="noopener"':'')+'>'+esc(n.linktext||"Mehr")+'</a>';
       if(n.quelle) extra += ' <a href="'+esc(safeUrl(n.quelle))+'" rel="noopener">Quelle</a>';
       var vid = n.video ? '<a class="vid" href="'+esc(safeUrl(n.video))+'" rel="noopener"><i><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="#fff"/></svg></i>'+esc(n.videotext||"Video ansehen")+'</a>' : "";
       return '<li><span class="badge b-'+esc(n.kategorie)+'">'+esc(n.kategorie)+'</span><span class="c"><b>'+esc(n.titel)+'</b><span>'+esc(n.text)+extra+'</span>'+vid+'</span><span class="dt">'+(n.datum?fmt(n.datum):"")+'</span></li>';
