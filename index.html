@@ -62,7 +62,8 @@ section{scroll-margin-top:20px}
 .news{background:var(--soft)}
 .news .in{padding-top:88px;padding-bottom:88px;display:flex;flex-wrap:wrap;gap:56px}
 .news .intro{flex:1 1 300px}
-.news ul{flex:999 1 560px;min-width:0;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.newscol{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:20px;align-items:flex-start}
+.news ul{width:100%;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .news li{background:#fff;border-radius:16px;padding:22px 24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
 .badge{flex:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:#E4EEF8;color:var(--navy)}
 .b-Baustelle{background:#FFF1D6;color:#7A4B00}.b-Mitmachen{background:#FDE7EA;color:#A10D25}.b-Neu{background:#E7F2EC;color:#1E5B3E}.b-Lesetipp{background:#F1E9F7;color:#5B2A6B}.b-Tipp{background:#FFF4D1;color:#7A5300}
@@ -221,7 +222,7 @@ section{scroll-margin-top:20px}
 
 <section id="news" class="news"><div class="wrap in">
   <div class="intro"><p class="eyebrow">News</p><h2 class="h2" style="margin-bottom:18px">Aus dem Viertel</h2><p class="lead" style="margin:0 0 24px">Baustellen, Sperrungen und kurze Hinweise – knapp und ohne Werbung.</p><button type="button" class="btn btn-red" data-open-form data-cat="News-Hinweis">Hinweis melden</button><p style="margin:10px 0 0;font-size:14px;color:var(--muted)">Wird vor der Veröffentlichung geprüft.</p></div>
-  <ul id="news-list" aria-live="polite"><li><span class="c"><span>Lade Meldungen …</span></span></li></ul>
+  <div class="newscol"><ul id="news-list" aria-live="polite"><li><span class="c"><span>Lade Meldungen …</span></span></li></ul><a class="btn" href="/marienthal-news/" style="border:1.5px solid #0E2A47;color:#0E2A47;padding:13.5px 24px">Alle News lesen →</a></div>
 </div></section>
 
 <section id="brett"><div class="wrap brett">
@@ -319,8 +320,8 @@ section{scroll-margin-top:20px}
 
   /* News aus daten/news.json */
   fetch("/daten/news.json", {cache:"no-cache"}).then(function(r){return r.json();}).then(function(list){
-    list = list.filter(function(n){ return !n.bis || day(n.bis) >= today; })
-               .sort(function(a,b){ return (a.immerUnten?1:0)-(b.immerUnten?1:0) || (b.datum||"").localeCompare(a.datum||""); });
+    list = list.filter(function(n){ return !n.immerUnten && (!n.bis || day(n.bis) >= today); })
+               .sort(function(a,b){ return (b.datum||"").localeCompare(a.datum||""); }).slice(0,4);
     var ul = document.getElementById("news-list");
     if(!list.length){ ul.innerHTML = '<li><span class="c"><span>Gerade gibt es keine Meldungen.</span></span></li>'; return; }
     ul.innerHTML = list.map(function(n){
@@ -362,6 +363,7 @@ section{scroll-margin-top:20px}
     modal.hidden = false; document.body.style.overflow = "hidden";
     setTimeout(function(){ form.querySelector('input[name=kategorie]:checked').focus(); }, 30);
   }
+  var mp = new URLSearchParams(location.search).get("melden"); if(mp) setTimeout(function(){ open(mp); }, 100);
   function close(){ modal.hidden = true; document.body.style.overflow = ""; if(lastFocus) lastFocus.focus(); }
   document.addEventListener("click", function(e){
     var o = e.target.closest("[data-open-form]"); if(o){ open(o.dataset.cat); return; }

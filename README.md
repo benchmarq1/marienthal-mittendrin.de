@@ -7,6 +7,8 @@ Nachbarschaftsportal für Hamburg-Marienthal, veröffentlicht über GitHub Pages
 - `index.html` – Startseite
 - `adventskalender-marienthal/` – Karte zum Lebendigen Adventskalender (Daten im Block `advent-data` in `index.html`, Positionen über `#admin`)
 - `weihnachtsmesse/` – Infoseite zur Marienthaler Weihnachtsmesse
+- `marienthal-news/` – alle News nach Monaten (Startseite zeigt nur die 4 neuesten)
+- `ueber-marienthal/` – Stadtteilgeschichte
 - `impressum/`, `datenschutz/` – Rechtsseiten
 - `assets/` – gemeinsames Stylesheet und lokale Schriften (kein Google-Fonts-Abruf)
 - `CNAME` – eigene Domain für GitHub Pages
