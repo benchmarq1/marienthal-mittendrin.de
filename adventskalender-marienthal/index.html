@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lebendiger Adventskalender Marienthal</title>
+<style id="font-style">
+/* Schriften lokal eingebunden (kein Google-Fonts-Abruf, DSGVO-freundlich) – SIL Open Font License */
+@font-face{font-family:"Fraunces";src:url(fonts/fraunces-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Fraunces";src:url(fonts/fraunces-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+</style>
+<style id="app-style">
+:root{
+  --bg:#0a1f15; --panel:#11301f; --land:#123323; --street-hi:#3d6a52;
+  --text:#eef4ee; --muted:#a7bfae; --gold:#f5c451; --red:#d23c34; --red-hi:#ff6a5e;
+  --line:#21472f; --danger:#ff8a7a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Work Sans",system-ui,sans-serif}
+body{min-height:100vh;background:
+  radial-gradient(1200px 500px at 70% -10%,#16422b 0%,transparent 60%),
+  radial-gradient(800px 400px at 0% 0%,#123a26 0%,transparent 55%),var(--bg)}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 60px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--red-hi);font-weight:600}
+h1{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(28px,4.4vw,46px);line-height:1.05;margin:6px 0 8px;letter-spacing:-.01em}
+.intro{color:var(--muted);max-width:620px;margin:0;line-height:1.5;font-size:15px}
+.status{background:rgba(210,60,52,.16);border:1px solid rgba(255,106,94,.5);color:#ffd2cc;border-radius:999px;padding:8px 14px;font-size:14px;white-space:nowrap}
+.mapcard{position:relative;background:var(--land);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.mapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mapcard svg{display:block;width:100%;height:auto;touch-action:pan-x pan-y}
+.mapnote{position:absolute;left:12px;bottom:10px;font-size:11px;color:#8fb09b;pointer-events:none;background:rgba(10,31,21,.7);padding:2px 8px;border-radius:6px}
+.star{cursor:pointer;outline:none}
+.star .shape{fill:var(--gold);stroke:#fff3cf;stroke-width:2.4;filter:url(#glow);transition:transform .15s}
+.star text{font:700 26px "Work Sans",sans-serif;fill:#3a2600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.star:hover .shape,.star:focus-visible .shape{transform:scale(1.18)}
+.star.past .shape{fill:#8a7440;stroke:#b9a56f;filter:none}
+.star.past text{fill:#2a2110}
+.star.sel .shape{transform:scale(1.32);stroke:var(--red-hi);stroke-width:5}
+.star.today .halo{animation:pulse 1.8s ease-out infinite}
+.halo{fill:none;stroke:var(--red-hi);stroke-width:4;opacity:0}
+@keyframes pulse{0%{r:34px;opacity:.9}100%{r:84px;opacity:0}}
+.editing .star{cursor:grab}
+.placing svg{cursor:crosshair}
+.pop{position:absolute;z-index:5;width:270px;background:#fffaf0;color:#2a2112;border-radius:14px;padding:14px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.45);transform:translate(-50%,calc(-100% - 22px))}
+.pop.below{transform:translate(-50%,22px)}
+.pop::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:#fffaf0;transform:translateX(-50%) rotate(45deg)}
+.pop.below::after{bottom:auto;top:-7px}
+.pop-day{font-size:12px;font-weight:600;color:#b3261e;text-transform:uppercase;letter-spacing:.08em;padding-right:22px}
+.pop-addr{font-family:"Fraunces",serif;font-size:21px;font-weight:700;margin:6px 0 2px;line-height:1.15}
+.pop-city{font-size:13px;color:#6b5c40}
+.pop-host{margin-top:10px;font-size:14px;color:#2a2112}.pop-host b{color:#b3261e}
+.pop-time{margin-top:10px;font-weight:600;font-size:15px}
+.pop-note{margin-top:6px;font-size:14px;color:#4b3f2a;line-height:1.4}
+.pop a{display:inline-block;margin-top:10px;font-size:13px;color:#b3261e;font-weight:600;text-decoration:none;border-bottom:1px solid #e9a39d}
+.pop-x{position:absolute;top:8px;right:8px;border:0;background:transparent;font-size:20px;line-height:1;color:#8b7a5a;cursor:pointer;padding:4px 6px}
+h2{font-family:"Fraunces",serif;font-size:22px;margin:34px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.door{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;color:var(--text);font:inherit;transition:border-color .15s,transform .15s}
+.door:hover{border-color:var(--red-hi);transform:translateY(-1px)}
+.door.sel{border-color:var(--red-hi);background:#183d28}
+.door.past{opacity:.55}
+.door.today{border-color:var(--red-hi);box-shadow:0 0 0 2px rgba(255,106,94,.3)}
+.door .n{font-family:"Fraunces",serif;font-size:24px;font-weight:700;color:var(--gold);line-height:1}
+.door .d{font-size:12px;color:var(--muted);margin-top:4px}
+.door .h{font-size:12px;color:var(--muted);margin-top:2px}
+.door.free{cursor:default;border-style:dashed;border-color:rgba(255,106,94,.55)}
+.door.free:hover{transform:none}
+.door .apply{display:inline-block;border:0;cursor:pointer;font-family:inherit;margin-top:8px;background:var(--red);color:#fff;font-weight:600;font-size:13px;text-decoration:none;border-radius:8px;padding:6px 10px}
+.door .apply:hover{background:#e14a41}
+.door .tag{margin-top:8px;font-size:13px;font-weight:600;color:#ffd2cc}
+.modal-bg{position:fixed;inset:0;background:rgba(4,14,9,.72);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{position:relative;background:#fffaf0;color:#2a2112;border-radius:16px;padding:22px 22px 16px;width:min(440px,100%);max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.modal h3{font-family:"Fraunces",serif;font-size:24px;margin:4px 0 6px}
+.modal .msub{margin:0 0 14px;color:#5b4e36;font-size:14px;line-height:1.45}
+.modal label{display:block;font-size:12px;font-weight:600;color:#6b5c40;margin-bottom:10px}
+.modal input,.modal textarea{margin-top:4px;background:#fff;color:#2a2112;border:1px solid #dccfb3;font-family:"Work Sans",sans-serif;font-size:15px;min-height:0}
+.modal input:focus,.modal textarea:focus{border-color:var(--red)}
+.modal .btn.primary{width:100%;margin-top:4px;padding:11px}
+.modal .privacy{font-size:12px;color:#7a6b50;margin:10px 0 0;line-height:1.4}
+.fmsg{font-size:13px;margin:2px 0 8px}.fmsg.err{color:#b3261e}
+.door.reserved{border-color:var(--line);border-style:solid}
+.door .s{font-size:13px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.btn{font:600 14px "Work Sans",sans-serif;border-radius:10px;padding:9px 14px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer}
+.btn:hover{border-color:var(--street-hi)}
+.btn.primary{background:var(--red);color:#fff;border-color:var(--red)}
+.btn.primary:hover{background:#e14a41}
+.btn.small{padding:6px 10px;font-size:13px}
+.btn.on{background:#4a1714;border-color:var(--red-hi);color:#ffd2cc}
+.msg{font-size:14px;color:var(--muted)}
+.msg.err{color:var(--danger)}
+.banner{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-weight:600;font-size:14px;border-radius:999px;padding:8px 16px;z-index:6;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.admin{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:18px}
+.admin h3{margin:0 0 12px;font-family:"Fraunces",serif;font-size:19px}
+.settings{display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;margin-bottom:18px}
+.settings label,.rowhead{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.settings .full{grid-column:1/-1}
+input,textarea{width:100%;font:14px "Work Sans",sans-serif;background:#0b2416;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+input:focus,textarea:focus{outline:none;border-color:var(--red-hi)}
+input[type=time]{color-scheme:dark}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:30px 70px minmax(150px,2fr) minmax(110px,1.3fr) 86px 86px minmax(130px,2fr) 104px;gap:8px;align-items:center}
+.row .num{font-family:"Fraunces",serif;font-weight:700;color:var(--gold);font-size:18px;text-align:center}
+.row .dt{font-size:12px;color:var(--muted)}
+.row.hl{background:#183d28;border-radius:10px;outline:1px solid var(--red-hi);outline-offset:3px}
+details{margin-top:16px}
+summary{cursor:pointer;color:var(--muted);font-size:14px}
+textarea{min-height:160px;font-family:ui-monospace,Menlo,monospace;font-size:12px;margin-top:10px}
+footer{margin-top:40px;color:#7f9d89;font-size:12px}
+@media (max-width:820px){
+  .row{grid-template-columns:30px 1fr 1fr;grid-template-areas:"n s s" "n h h" "d f t" "x x p"}
+  .row .num{grid-area:n}.row .dt{grid-area:d}.row .f-street{grid-area:s}.row .f-host{grid-area:h}.row .f-from{grid-area:f}.row .f-to{grid-area:t}.row .f-note{grid-area:x}.row .place{grid-area:p}
+  .row{padding:8px;border-bottom:1px solid var(--line)}
+  .settings{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .mapcard svg{min-width:1000px}
+  .pop,.pop.below{position:fixed;left:12px!important;right:12px;top:auto!important;bottom:12px;width:auto;transform:none}
+  .pop::after{display:none}
+  .status{white-space:normal}
+}
+
+/* Weihnachts-Deko */
+.garland{display:block;width:calc(100% + 40px);height:auto;margin:-28px -20px 2px;overflow:visible}
+.bauble{transform-box:fill-box;transform-origin:50% 0;animation:swing 3.4s ease-in-out infinite alternate}
+@keyframes swing{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+.flake-ico{display:inline-block;color:#eef4ee;animation:spin 9s linear infinite}
+.flake-ico.d2{animation-duration:13s;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hdr-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.snow-toggle{font:500 12px "Work Sans",sans-serif;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.snow-toggle:hover{color:var(--text);border-color:var(--street-hi)}
+#snow{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:40}
+.star .shape{animation:twinkle 3s ease-in-out infinite;animation-delay:calc(var(--tw,0s) * -1)}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.78}}
+.mapcard{box-shadow:0 20px 60px rgba(0,0,0,.35),inset 0 0 60px rgba(220,240,230,.05)}
+.door:hover .n{animation:jiggle .45s ease}
+@keyframes jiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(8deg)}}
+.door .n{display:inline-block}
+.door.today{position:relative;overflow:hidden}
+.door.today::after{content:"heute";position:absolute;top:10px;right:-24px;transform:rotate(35deg);background:var(--red);color:#fff;font-size:11px;font-weight:600;padding:2px 28px}
+.trees{display:block;width:100%;height:auto;margin-top:46px}
+.tl{animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+footer{margin-top:6px!important;text-align:center}
+@media (prefers-reduced-motion: reduce){.bauble,.flake-ico,.star .shape,.tl,.door:hover .n{animation:none}}
+@media (max-width:640px){.garland{margin-top:-20px}.hdr-side{align-items:flex-start}}
+</style>
+<style id="gate-style">
+.gate{max-width:640px;margin:0 auto;padding:40px 20px 48px}
+.gate h1{margin:6px 0 12px}
+.gate .lockbox{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0 22px;color:var(--muted);line-height:1.5;font-size:15px}
+.gate .lockbox svg{flex:none;margin-top:2px}
+.gate label.lbl{display:block;font-size:14px;color:var(--muted);margin:0 0 6px}
+.gate .row{display:flex;gap:10px;flex-wrap:wrap}
+.gate input[type=password],.gate input[type=text],.gate input[type=email],.gate textarea{font:400 16px "Work Sans",sans-serif;background:#f3ebdd;color:#123323;border:2px solid transparent;border-radius:12px;padding:12px 14px;width:100%}
+.gate .row input{flex:1 1 200px;width:auto;min-width:0}
+.gate input:focus,.gate textarea:focus{outline:none;border-color:var(--gold)}
+.gate .go{font:600 16px "Work Sans",sans-serif;background:var(--red);color:#fff;border:0;border-radius:999px;padding:13px 24px;cursor:pointer;min-height:48px}
+.gate .go:hover{background:#b8302a}
+.gate .go[disabled]{opacity:.7;cursor:wait}
+.gate .remember{display:flex;gap:8px;align-items:center;margin:12px 0 0;font-size:14px;color:var(--muted)}
+.gate .remember input{width:18px;height:18px}
+.gate .err{color:var(--danger);font-size:14px;margin:10px 0 0;min-height:1.2em}
+.gate hr{border:0;border-top:1px dashed var(--line);margin:30px 0 22px}
+.gate .ask{font:600 15px "Work Sans",sans-serif;background:transparent;color:var(--gold);border:1.5px solid var(--gold);border-radius:999px;padding:11px 20px;cursor:pointer;min-height:44px}
+.gate .ask:hover{background:rgba(245,196,81,.1)}
+.gate form.req{display:flex;flex-direction:column;gap:12px;margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.gate form.req[hidden]{display:none}
+.gate form.req h2{font-family:"Fraunces",serif;font-size:24px;margin:0}
+.gate .consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--muted)}
+.gate .consent input{width:18px;height:18px;flex:none;margin-top:1px}
+.gate a{color:var(--gold)}
+.gate .ok{background:rgba(245,196,81,.12);border:1px solid rgba(245,196,81,.5);border-radius:14px;padding:16px;color:var(--text);line-height:1.5}
+.gate .public{margin-top:30px;color:var(--muted);font-size:15px;line-height:1.6}
+.gate .public b{color:var(--text)}
+</style>
+</head>
+<body>
+<div id="root"><section class="gate" aria-labelledby="gate-title">
+  <div class="eyebrow">1.–24. Dezember</div>
+  <h1 id="gate-title">Lebendiger Adventskalender Marienthal</h1>
+  <p class="intro">Vom 1. bis 24. Dezember öffnet jeden Abend ein anderes Haus in unserer Nachbarschaft seine Tür – mit Glühwein, Punsch und manchmal kleinen Leckereien.</p>
+  <div class="lockbox"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#f5c451" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Die Adressen unserer Gastgeber sind nur für die Nachbarschaft sichtbar. Gib den Zugangscode ein, um Karte und Termine zu öffnen.</span></div>
+  <form id="gate-form" autocomplete="off">
+    <label class="lbl" for="gate-code">Zugangscode</label>
+    <div class="row"><input type="password" id="gate-code" autocomplete="current-password" required><button class="go" type="submit">Karte öffnen</button></div>
+    <label class="remember"><input type="checkbox" id="gate-remember"> Auf diesem Gerät merken</label>
+    <p class="err" id="gate-err" role="alert"></p>
+  </form>
+  <hr>
+  <p style="margin:0 0 12px;color:var(--muted)">Noch keinen Code? Du wohnst in Marienthal, möchtest mitfeiern oder selbst ein Türchen übernehmen?</p>
+  <button class="ask" type="button" id="gate-ask" aria-expanded="false" aria-controls="gate-req">Zugang erfragen</button>
+  <form class="req" id="gate-req" hidden novalidate>
+    <h2>Zugang erfragen</h2>
+    <p style="margin:0;color:var(--muted);font-size:14px">Wir schicken dir den Code per Mail – meist am selben Tag.</p>
+    <label class="lbl">Name<input type="text" name="name" autocomplete="name" required></label>
+    <label class="lbl">E-Mail<input type="email" name="email" autocomplete="email" required></label>
+    <label class="lbl">Straße in Marienthal (optional)<input type="text" name="strasse"></label>
+    <label class="lbl">Nachricht (optional)<textarea name="nachricht" rows="3"></textarea></label>
+    <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
+    <label class="consent"><input type="checkbox" name="einwilligung" required><span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage verwendet werden. <a href="/datenschutz/">Datenschutz</a></span></label>
+    <p class="err" id="req-err" role="alert"></p>
+    <button class="go" type="submit" style="align-self:flex-start">Anfrage senden</button>
+  </form>
+  <div class="ok" id="req-ok" hidden role="status">Danke! Deine Anfrage ist angekommen. Du bekommst den Code per Mail.</div>
+</section>
+</div><!--/root-->
+<div class="site-links" style="max-width:1120px;margin:0 auto;padding:8px 20px 40px;text-align:center;font-family:'Work Sans',sans-serif">
+<a href="/" style="display:inline-block;background:#d23c34;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 20px;border-radius:999px;white-space:nowrap">← Zurück zu marienthal-mittendrin.de</a>
+<p style="margin:18px 0 0;font-size:13px;color:#a7bfae"><a href="/impressum/" style="color:inherit">Impressum</a> · <a href="/datenschutz/" style="color:inherit">Datenschutz</a></p>
+</div>
+<script type="application/json" id="advent-enc">{"v": 1, "kdf": "PBKDF2-SHA256", "iter": 600000, "salt": "s3kFkdbn+Mh2pIMx2KNh1Q==", "iv": "aLlmlSP0kLzC4DYm", "ct": "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"}</script>
+<script type="text/plain" id="app-src">
+(function(){
+"use strict";
+var W=3500,H=1715,DY=460,W3F="1252e4e4-b5f2-48ac-87a4-d0547c6e60de";
+var data=JSON.parse(document.getElementById("advent-data").textContent);
+var state={sel:null,editing:false,draft:null,placing:null,canEdit:false,msg:"",msgErr:false,hl:null};
+var root=document.getElementById("root");
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function cur(){return state.editing?state.draft:data;}
+function door(n){var d=cur().doors;for(var i=0;i<d.length;i++)if(d[i].n===n)return d[i];return null;}
+function dateOf(n){return new Date(cur().year,11,n);}
+function fmtDate(n,opt){return dateOf(n).toLocaleDateString("de-DE",opt||{weekday:"long",day:"numeric",month:"long"});}
+function fmtTime(t){return (t||"").replace(":",".");}
+function timeText(d){if(d.from&&d.to)return "von "+fmtTime(d.from)+" bis "+fmtTime(d.to)+" Uhr";if(d.from)return "ab "+fmtTime(d.from)+" Uhr";return "Uhrzeit folgt";}
+function today(){var t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate());}
+function dayStatus(n){var diff=(dateOf(n)-today())/864e5;return diff<0?"past":diff===0?"today":"future";}
+function statusText(){
+  var y=cur().year,t=today(),start=new Date(y,11,1),end=new Date(y,11,24);
+  if(t<start){var dd=Math.round((start-t)/864e5);return dd===1?"Morgen öffnet das erste Türchen":"Noch "+dd+" Tage bis zum ersten Türchen";}
+  if(t>end)return "Der Adventskalender "+y+" ist vorbei – danke an alle Gastgeber!";
+  var n=t.getDate(),d=door(n);return "Heute: Türchen "+n+(d&&d.street?" · "+d.street:"");
+}
+function starPath(R,r){var p=[];for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rad=i%2?r:R;p.push((Math.cos(a)*rad).toFixed(1)+","+(Math.sin(a)*rad).toFixed(1));}return p.join(" ");}
+var STAR=starPath(44,19);
+function mapsLink(d){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(d.street+", "+cur().city);}
+
+/* ---------- Karte (vereinfacht nachgezeichnet nach dem realen Straßenverlauf) ---------- */
+var MAJOR=[
+ {name:"Ring 2",pts:[[40,120],[130,270],[230,345],[330,440],[390,570],[470,760],[560,960],[660,1255]],lab:[[4,.5]],w:30,fill:"#6d5a3c"},
+ {name:"Jüthornstraße",pts:[[0,625],[140,500],[330,445],[430,395],[600,330],[900,230],[1150,140],[1325,60],[1385,45],[1665,65],[1965,90]],lab:[[4,.5],[6,.55],[8,.5]],w:24,fill:"#4c735d"},
+ {name:"Rodigallee",pts:[[1965,90],[2462,-8]],lab:[[0,.4]],w:24,fill:"#4c735d"},
+ {name:"A 24",pts:[[540,1255],[1300,1120],[2000,1010],[2462,930]],lab:[],w:34,fill:"#6d5a3c",motorway:true}
+];
+var STREETS=[
+ {name:"Kurvenstraße",pts:[[25,230],[110,440],[160,560],[190,800]],lab:[[2,.5]]},
+ {name:"Schatzmeisterstraße",pts:[[470,0],[600,320],[715,570]],lab:[[1,.45]]},
+ {name:"Jüthornkamp",pts:[[290,110],[330,250],[380,350]],lab:[[0,.45]]},
+ {name:"Ziesenißstraße",pts:[[180,165],[420,0]],lab:[[0,.45]]},
+ {name:"An d. Marienanlage",pts:[[715,570],[870,620]],lab:[[0,.5]]},
+ {name:"",pts:[[715,570],[660,725],[815,780],[870,620]],lab:[]},
+ {name:"Ahornstraße",pts:[[870,620],[1170,490],[1320,425]],lab:[[0,.55]]},
+ {name:"Am Husarendenkmal",pts:[[0,905],[200,880],[470,810],[660,725]],lab:[[2,.45],[0,.55]]},
+ {name:"Luisenstraße",pts:[[815,780],[870,910],[980,1150]],lab:[[1,.6]]},
+ {name:"Nöpps",pts:[[600,1045],[880,920],[1290,745],[1640,580]],lab:[[0,.45],[2,.6]]},
+ {name:"Oktaviostraße",pts:[[1110,335],[1320,425],[1640,580],[1960,735],[2200,815],[2300,805],[2462,715]],lab:[[1,.45],[3,.45],[5,.5]]},
+ {name:"Ernst-Albers-Straße",pts:[[1040,195],[1110,335],[1170,490],[1290,745],[1400,990]],lab:[[3,.45]]},
+ {name:"Kielmannseggstraße",pts:[[1965,90],[1995,230],[2060,480],[2020,620],[1960,735],[1650,880],[1420,990],[1300,1015],[1200,1010],[1180,950],[1150,810]],lab:[[2,.4],[5,.5],[9,.5]]},
+ {name:"Behrensstraße",pts:[[1540,630],[1650,880]],lab:[[0,.45]]},
+ {name:"Kielmannseggstieg",pts:[[1593,907],[1615,985],[1637,1025],[1659,1035],[1888,1003],[1914,987],[1919,965],[1844,789]],lab:[[3,.5]]},
+ {name:"Stoltenstraße",pts:[[2200,815],[2240,960],[2290,1255]],lab:[[1,.55]]},
+ {name:"Zirpenweg",pts:[[2240,960],[2462,860]],lab:[[0,.6]]},
+ {name:"Husarenhof",pts:[[230,890],[250,1100],[390,1175]],lab:[[0,.5]]},
+ {name:"Derbyweg",pts:[[880,1255],[1500,1155],[1900,1085],[2462,1040]],lab:[[2,.5]]},
+ {name:"",pts:[[420,400],[470,520],[560,505]],lab:[]},
+ {name:"",pts:[[0,770],[170,745],[300,740]],lab:[]},
+ {name:"",pts:[[1180,170],[1230,330]],lab:[]}
+];
+var PARKS=[
+ [[600,0],[1180,20],[1300,55],[1150,140],[900,230],[860,238],[640,190]],
+ [[1175,175],[1330,98],[1960,102],[1995,145],[2462,52],[2462,690],[2300,700],[2180,650],[1990,725],[1700,505],[1620,335],[1380,292],[1185,255]],
+ [[715,570],[870,620],[815,780],[660,725]]
+];
+function line(p){return p.map(function(q){return q.join(",");}).join(" ");}
+function labelsFor(st,size,color){
+  var out="";
+  st.lab.forEach(function(L){
+    var a=st.pts[L[0]],b=st.pts[L[0]+1],t=L[1];
+    var x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;
+    var ang=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;
+    if(ang>90)ang-=180;if(ang<-90)ang+=180;
+    out+='<text x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" transform="rotate('+ang.toFixed(1)+' '+x.toFixed(0)+' '+y.toFixed(0)+')" font-size="'+size+'" fill="'+color+'" text-anchor="middle" dominant-baseline="central" stroke="#123323" stroke-width="6" paint-order="stroke" font-weight="500">'+esc(st.name)+'</text>';
+  });
+  return out;
+}
+
+var NORTH=[
+ {name:"Rauchstraße",pts:[[1080,290],[1265,250],[1415,232],[1785,120],[2045,40],[2165,5]],lab:[[1,.5],[3,.45]]},
+ {name:"Bovestraße",pts:[[965,120],[1005,160],[1075,260],[1125,350],[1215,460],[1335,505]],lab:[[3,.5]]},
+ {name:"Gustav-Adolf-Straße",pts:[[965,100],[1095,45],[1195,15]],lab:[[0,.6]]},
+ {name:"Friedastraße",pts:[[1195,15],[1250,240]],lab:[[0,.5]]},
+ {name:"Tratzigerstraße",pts:[[1335,0],[1405,232]],lab:[[0,.45]]},
+ {name:"Alphonsstraße",pts:[[1780,120],[1825,260],[1865,380],[1900,490],[1930,545]],lab:[[1,.5]]},
+ {name:"Kielmannseggstraße",pts:[[2040,30],[2095,180],[2125,298],[2065,420],[1965,550]],lab:[[1,.5],[3,.5]]},
+ {name:"Schimmelmannstraße",pts:[[1855,345],[2005,305],[2125,298],[2265,255],[2462,195]],lab:[[0,.6],[3,.5]]},
+ {name:"Westerkamp",pts:[[2180,10],[2265,255]],lab:[[0,.45]]},
+ {name:"Bornkamp",pts:[[2325,0],[2385,230],[2462,440]],lab:[[1,.5]]},
+ {name:"",pts:[[1655,250],[1815,260]],lab:[]},
+ {name:"",pts:[[1655,282],[1805,282],[1790,330]],lab:[]},
+ {name:"",pts:[[2305,410],[2315,505]],lab:[]},
+ {name:"",pts:[[1075,450],[1165,420]],lab:[]}
+];
+
+var EAST_MAJOR=[
+ {name:"Rodigallee",pts:[[2462,452],[2766,370],[3053,289],[3500,175]],lab:[[1,.5]],w:24,fill:"#4c735d"},
+ {name:"A 24",pts:[[2462,1390],[3500,1210]],lab:[],w:34,fill:"#6d5a3c",motorway:true}
+];
+var EAST=[
+ {name:"Osterkamp",pts:[[2615,0],[2665,170],[2737,380],[2788,531],[2845,709],[2885,883]],lab:[[3,.5],[4,.5]]},
+ {name:"Mittelkamp",pts:[[2465,0],[2525,175],[2565,260],[2645,402]],lab:[[1,.5]]},
+ {name:"Schimmelmannstraße",pts:[[2462,195],[2806,85]],lab:[]},
+ {name:"Zikadenweg",pts:[[2781,531],[2917,488],[3023,455],[3144,433],[3296,421],[3348,417]],lab:[[0,.5],[3,.5]]},
+ {name:"",pts:[[3296,421],[3284,376]],lab:[]},
+ {name:"",pts:[[3027,459],[3057,535]],lab:[]},
+ {name:"",pts:[[3137,448],[3148,497]],lab:[]},
+ {name:"",pts:[[3318,486],[3454,452]],lab:[]},
+ {name:"",pts:[[3311,429],[3330,542]],lab:[]},
+ {name:"Holstenhofweg",pts:[[3390,200]].concat([[3417,285],[3447,383],[3492,588],[3523,709]]),lab:[[2,.5]]},
+ {name:"Oktaviostraße",pts:[[2462,1175]].concat([[2554,1085],[2887,891],[2917,906],[2993,919],[3068,883],[3152,822],[3216,769],[3280,724],[3348,682]]),lab:[[1,.45],[6,.5]]},
+ {name:"Oktaviostraße",pts:[[3034,766],[3042,815],[3065,879]],lab:[[1,.5]]},
+ {name:"Zirpenweg",pts:[[2462,1320]].concat([[2819,1085],[3065,883]]),lab:[[1,.5]]},
+ {name:"",pts:[[3076,887],[3137,959],[3110,1085]],lab:[]},
+ {name:"",pts:[[3144,849],[3190,906],[3243,928],[3296,951]],lab:[]},
+ {name:"Derbyweg",pts:[[2462,1500],[3500,1330]],lab:[]}
+];
+var EAST_PATH=[[2841,720],[2917,686],[2955,656],[3068,618],[3182,603],[3296,626],[3356,679],[3447,739],[3523,754]];
+var EAST_PARKS=[
+ [[2462,512],[2580,500],[2675,483],[2735,573],[2788,709],[2788,853],[2690,928],[2554,1004],[2462,1150]],
+ [[2906,637],[2981,535],[3004,535],[3012,565],[2917,641]]
+];
+function eastParks(){
+  var s='<g transform="translate(0,'+DY+')">';
+  EAST_PARKS.forEach(function(p){var q=p.map(function(v){return [v[0],v[1]-DY];});s+='<polygon points="'+line(q)+'" fill="#1b4a30"/><polygon points="'+line(q)+'" fill="url(#trees)" opacity=".7"/>';});
+  return s+'</g>';
+}
+function eastPond(){
+  var s="";
+  s+='<path d="M2425 754 a95 47 0 1 0 189 0 a95 47 0 1 0 -189 0 Z" fill="#3c7a8c"/>';
+  s+='<ellipse cx="2512" cy="758" rx="45" ry="23" fill="#1b4a30"/>';
+  return s;
+}
+function eastStreets(){
+  var s='<polyline points="'+line(EAST_PATH)+'" fill="none" stroke="#5b8a70" stroke-width="4" stroke-dasharray="10 9"/>';
+  s+=labelsFor({name:"Husarenweg",pts:EAST_PATH,lab:[[3,.5]]},18,"#a9c7b4");
+  EAST.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#0c2617" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>';});
+  EAST.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#3a6650" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>';});
+  EAST_MAJOR.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#0c2617" stroke-width="'+(st.w+8)+'" stroke-linecap="round" stroke-linejoin="round"/>';});
+  EAST_MAJOR.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="'+st.fill+'" stroke-width="'+st.w+'" stroke-linecap="round" stroke-linejoin="round"/>';
+    if(st.motorway)s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#123323" stroke-width="3" stroke-dasharray="26 20"/>';});
+  EAST.forEach(function(st){if(st.name)s+=labelsFor(st,21,"#c9dccf");});
+  EAST_MAJOR.forEach(function(st){s+=labelsFor(st,23,"#f0e6d2");});
+  s+='<g transform="translate(3050,1287)"><rect x="-26" y="-15" width="52" height="30" rx="7" fill="#2b5aa8" stroke="#fff" stroke-width="2.5"/><text text-anchor="middle" dominant-baseline="central" font-size="19" font-weight="700" fill="#fff">A24</text></g>';
+  s+='<text x="2917" y="580" font-size="17" font-style="italic" fill="#8fc4a2" text-anchor="middle">Spielplatz</text>';
+  s+='<text x="3401" y="883" font-size="19" font-style="italic" fill="#8fb39c" text-anchor="middle">Gymnasium Marienthal</text>';
+  return s;
+}
+function northMap(){
+  var s='<polygon points="1345,232 1655,232 1655,395 1345,395" fill="#1d3f2c" stroke="#2a5a40" stroke-width="2"/>';
+  s+='<text x="1500" y="320" font-size="20" fill="#8fb39c" text-anchor="middle" font-style="italic">Asklepios Klinik Wandsbek</text>';
+  NORTH.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#0c2617" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>';});
+  NORTH.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#3a6650" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>';});
+  NORTH.forEach(function(st){if(st.name)s+=labelsFor(st,21,"#c9dccf");});
+  s+='<text x="480" y="230" font-size="26" fill="#4f7a62" letter-spacing="6" text-anchor="middle">↖ WANDSBEK</text>';
+  return s;
+}
+function baseMap(){
+  var s="";
+  s+='<defs><filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+     '<pattern id="trees" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="12" cy="14" r="7" fill="#235a3b"/><circle cx="33" cy="32" r="6" fill="#205236"/></pattern></defs>';
+  s+='<rect width="'+W+'" height="'+H+'" fill="#123323"/>';
+  s+=northMap();
+  s+=eastParks();
+  s+='<g transform="translate(0,'+DY+')">';
+  PARKS.forEach(function(p){s+='<polygon points="'+line(p)+'" fill="#1b4a30"/><polygon points="'+line(p)+'" fill="url(#trees)" opacity=".7"/>';});
+  /* Wasser */
+  s+='<ellipse cx="770" cy="688" rx="46" ry="28" fill="#3c7a8c"/><ellipse cx="1735" cy="242" rx="46" ry="30" fill="#3c7a8c"/>';
+  /* Nebenstraßen */
+  STREETS.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#0c2617" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>';});
+  STREETS.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#3a6650" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>';});
+  /* Hauptstraßen */
+  MAJOR.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#0c2617" stroke-width="'+(st.w+8)+'" stroke-linecap="round" stroke-linejoin="round"/>';});
+  MAJOR.forEach(function(st){s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="'+st.fill+'" stroke-width="'+st.w+'" stroke-linecap="round" stroke-linejoin="round"/>';
+    if(st.motorway)s+='<polyline points="'+line(st.pts)+'" fill="none" stroke="#123323" stroke-width="3" stroke-dasharray="26 20"/>';});
+  /* Labels */
+  s+='<text x="900" y="95" font-size="24" font-style="italic" fill="#8fc4a2" text-anchor="middle">Wandsbeker Gehölz</text>';
+  s+='<text x="2220" y="470" font-size="24" font-style="italic" fill="#8fc4a2" text-anchor="middle">Wandsbeker Gehölz</text>';
+  s+='<text x="765" y="745" font-size="19" font-style="italic" fill="#8fc4a2" text-anchor="middle">Marienanlage</text>';
+  STREETS.forEach(function(st){if(st.name)s+=labelsFor(st,21,"#c9dccf");});
+  MAJOR.forEach(function(st){s+=labelsFor(st,23,"#f0e6d2");});
+  /* A24-Schilder */
+  [[900,1185],[1640,1066],[2250,968]].forEach(function(p){s+='<g transform="translate('+p[0]+','+p[1]+')"><rect x="-26" y="-15" width="52" height="30" rx="7" fill="#2b5aa8" stroke="#fff" stroke-width="2.5"/><text text-anchor="middle" dominant-baseline="central" font-size="19" font-weight="700" fill="#fff">A24</text></g>';});
+  s+='</g>';
+  s+=eastPond();
+  s+=eastStreets();
+  s+='<g transform="translate(3420,1640)"><circle r="38" fill="#0f2c1d" stroke="#2f5c42" stroke-width="2"/><path d="M0 -26 L10 8 L0 0 L-10 8Z" fill="#d23c34"/><text y="26" text-anchor="middle" font-size="17" fill="#c9dccf">N</text></g>';
+  return s;
+}
+var BASE=baseMap();
+
+
+function starsSVG(){
+  var s="";
+  cur().doors.filter(function(d){return state.editing||d.street;}).slice().sort(function(a,b){return (state.sel===a.n)-(state.sel===b.n);}).forEach(function(d){
+    var st=dayStatus(d.n),cls="star "+st+(state.sel===d.n?" sel":"");
+    s+='<g class="'+cls+'" data-n="'+d.n+'" transform="translate('+d.x+','+d.y+')" style="--tw:'+((d.n*0.53)%3).toFixed(2)+'s" tabindex="0" role="button" aria-label="Türchen '+d.n+': '+esc(d.street)+'">'+
+       '<circle class="halo" r="28"/><polygon class="shape" points="'+STAR+'"/><text y="3">'+d.n+'</text></g>';
+  });
+  return s;
+}
+
+/* ---------- render ---------- */
+function render(){
+  var c=cur(),h="";
+  h+='<div class="wrap'+(state.editing?" editing":"")+'">';
+  h+=GARLAND;
+  h+='<header><div><div class="eyebrow"><span class="flake-ico">❄</span> Advent '+esc(c.year)+' · Hamburg-Marienthal <span class="flake-ico d2">❄</span></div><h1>'+esc(c.title)+'</h1><p class="intro">'+esc(c.intro)+'</p></div><div class="hdr-side"><div class="status">'+esc(statusText())+'</div><button class="snow-toggle" data-act="snow" aria-pressed="'+(snowOn?"true":"false")+'">'+(snowOn?"❄ Schnee an":"❄ Schnee aus")+'</button></div></header>';
+  h+='<div class="mapcard'+(state.placing?" placing":"")+'" id="mapcard">';
+  if(state.placing)h+='<div class="banner">Klicke auf die Karte, um Türchen '+state.placing+' zu platzieren</div>';
+  h+='<div class="mapscroll"><svg id="map" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+BASE+'<g id="stars">'+starsSVG()+'</g></svg></div>';
+  h+='<div class="mapnote">Straßenverlauf vereinfacht dargestellt</div>';
+  h+=popupHTML();
+  h+='</div>';
+  if(state.editing)h+=adminHTML();
+  else{
+    h+='<h2>Alle 24 Türchen</h2><div class="grid">';
+    c.doors.forEach(function(d){var st=dayStatus(d.n);
+      if(!d.street){
+        var dd=esc(fmtDate(d.n,{weekday:"short",day:"numeric",month:"short"}));
+        if(d.note){h+='<div class="door free reserved"><div class="n">'+d.n+'</div><div class="d">'+dd+'</div><div class="tag">'+esc(d.note)+'</div></div>';}
+        else{h+='<div class="door free"><div class="n">'+d.n+'</div><div class="d">'+dd+' · noch frei</div><button class="apply" data-apply="'+d.n+'">Jetzt bewerben</button></div>';}
+        return;}
+      h+='<button class="door '+st+(state.sel===d.n?" sel":"")+'" data-door="'+d.n+'"><div class="n">'+d.n+'</div><div class="d">'+esc(fmtDate(d.n,{weekday:"short",day:"numeric",month:"short"}))+' · '+esc(fmtTime(d.from))+'</div><div class="s">'+esc(d.street)+'</div>'+(d.host?'<div class="h">'+esc(d.host)+'</div>':"")+'</button>';});
+    h+='</div>';
+    if(state.canEdit)h+='<div class="toolbar"><button class="btn" data-act="edit">Adressen bearbeiten</button>'+msgHTML()+'</div>';
+  }
+  h+=TREES+'<footer>Frohe Adventszeit! · Lebendiger Adventskalender · Nachbarschaft Hamburg-Marienthal</footer></div>';
+  var osc=root.querySelector(".mapscroll"),sl=osc?osc.scrollLeft:0;
+  root.innerHTML=h;
+  var nsc=root.querySelector(".mapscroll");if(nsc&&sl)nsc.scrollLeft=sl;
+  if(state.hl){var r=root.querySelector('.row[data-row="'+state.hl+'"]');if(r)r.scrollIntoView({block:"nearest",behavior:"smooth"});state.hl=null;}
+}
+function msgHTML(){return state.msg?'<span class="msg'+(state.msgErr?" err":"")+'">'+esc(state.msg)+'</span>':"";}
+function popupHTML(){
+  if(state.sel==null||state.placing)return "";
+  var d=door(state.sel);if(!d)return "";
+  var below=d.y<600,left=Math.min(Math.max(d.x/W*100,14),86),top=d.y/H*100;
+  return '<div class="pop'+(below?" below":"")+'" style="left:'+left+'%;top:'+top+'%">'+
+    '<button class="pop-x" data-act="close" aria-label="Schließen">×</button>'+
+    '<div class="pop-day">Türchen '+d.n+' · '+esc(fmtDate(d.n))+'</div>'+
+    '<div class="pop-addr">'+esc(d.street||"Adresse folgt")+'</div><div class="pop-city">'+esc(cur().city)+'</div>'+
+    (d.host?'<div class="pop-host">bei <b>'+esc(d.host)+'</b></div>':"")+
+    '<div class="pop-time">'+esc(timeText(d))+'</div>'+
+    (d.note?'<div class="pop-note">'+esc(d.note)+'</div>':"")+
+    (d.street?'<a href="'+esc(mapsLink(d))+'" target="_blank" rel="noopener">In Google Maps öffnen ↗</a>':"")+
+  '</div>';
+}
+function adminHTML(){
+  var c=state.draft,h='<div class="admin"><h3>Adressen verwalten</h3>';
+  h+='<div class="settings"><div><label>Jahr</label><input type="number" data-s="year" value="'+esc(c.year)+'"></div><div><label>Titel</label><input data-s="title" value="'+esc(c.title)+'"></div><div><label>PLZ / Ort</label><input data-s="city" value="'+esc(c.city)+'"></div><div class="full"><label>Einleitungstext</label><input data-s="intro" value="'+esc(c.intro)+'"></div></div>';
+  h+='<div class="row" style="margin-bottom:2px"><span class="rowhead">Nr.</span><span class="rowhead">Datum</span><span class="rowhead">Straße & Hausnummer</span><span class="rowhead">Gastgeber</span><span class="rowhead">Von</span><span class="rowhead">Bis</span><span class="rowhead">Hinweis (optional)</span><span class="rowhead">Position</span></div>';
+  h+='<div class="rows">';
+  c.doors.forEach(function(d){
+    h+='<div class="row'+(state.sel===d.n?" hl":"")+'" data-row="'+d.n+'"><span class="num">'+d.n+'</span><span class="dt">'+esc(fmtDate(d.n,{weekday:"short",day:"numeric",month:"numeric"}))+'</span>'+
+      '<input class="f-street" data-n="'+d.n+'" data-f="street" value="'+esc(d.street)+'" placeholder="z. B. Rauchstraße 12">'+
+      '<input class="f-host" data-n="'+d.n+'" data-f="host" value="'+esc(d.host||"")+'" placeholder="z. B. Familie Müller">'+
+      '<input class="f-from" type="time" data-n="'+d.n+'" data-f="from" value="'+esc(d.from)+'">'+
+      '<input class="f-to" type="time" data-n="'+d.n+'" data-f="to" value="'+esc(d.to)+'">'+
+      '<input class="f-note" data-n="'+d.n+'" data-f="note" value="'+esc(d.note)+'" placeholder="z. B. Kinderpunsch">'+
+      '<button class="btn small place'+(state.placing===d.n?" on":"")+'" data-place="'+d.n+'">'+(state.placing===d.n?"Klick auf Karte…":"Auf Karte setzen")+'</button></div>';
+  });
+  h+='</div>';
+  h+='<p class="msg" style="margin-top:12px">Tipp: Im Bearbeitungsmodus kannst du die Sterne auch direkt auf der Karte verschieben.</p>';
+  h+='<div class="toolbar"><button class="btn primary" data-act="save">Speichern & veröffentlichen</button><button class="btn" data-act="cancel">Abbrechen</button><button class="btn" data-act="copy">Als JSON kopieren</button>'+msgHTML()+'</div>';
+  h+='<details><summary>Daten als JSON einfügen (z. B. aus einer Tabelle)</summary><textarea id="jsonin" placeholder="JSON hier einfügen …"></textarea><div class="toolbar"><button class="btn small" data-act="import">Übernehmen</button></div></details>';
+  h+='</div>';
+  return h;
+}
+function setMsg(t,err){state.msg=t;state.msgErr=!!err;}
+
+/* ---------- events ---------- */
+root.addEventListener("click",function(e){
+  var ap=e.target.closest("[data-apply]");if(ap){openApply(+ap.dataset.apply);return;}
+  var t=e.target.closest("[data-act],[data-door],[data-place]");
+  if(t){
+    if(t.dataset.door){state.sel=+t.dataset.door;render();var m=document.getElementById("mapcard");if(m)m.scrollIntoView({behavior:"smooth",block:"start"});return;}
+    if(t.dataset.place){var n=+t.dataset.place;state.placing=state.placing===n?null:n;state.sel=n;render();return;}
+    var a=t.dataset.act;
+    if(a==="close"){state.sel=null;render();}
+    else if(a==="edit"){state.draft=JSON.parse(JSON.stringify(data));state.editing=true;setMsg("");render();}
+    else if(a==="cancel"){state.editing=false;state.draft=null;state.placing=null;setMsg("");render();}
+    else if(a==="save")save();
+    else if(a==="copy")copyJSON();
+    else if(a==="import")importJSON();
+    return;
+  }
+  if(e.target.closest("#map")&&!e.target.closest(".star")){
+    if(state.placing){var p=svgPoint(e);var d=door(state.placing);d.x=Math.round(p.x);d.y=Math.round(p.y);state.sel=state.placing;state.placing=null;render();}
+    else if(state.sel!=null&&!dragMoved){state.sel=null;render();}
+  }
+});
+root.addEventListener("keydown",function(e){
+  var g=e.target.closest&&e.target.closest(".star");
+  if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();selectStar(+g.dataset.n);}
+  if(e.key==="Escape"&&state.sel!=null){state.sel=null;render();}
+});
+root.addEventListener("input",function(e){
+  var el=e.target;if(!state.editing)return;
+  if(el.dataset.s){var v=el.value;state.draft[el.dataset.s]=el.dataset.s==="year"?(parseInt(v,10)||data.year):v;}
+  else if(el.dataset.f){var d=door(+el.dataset.n);if(d)d[el.dataset.f]=el.value;}
+});
+function selectStar(n){state.sel=n;if(state.editing)state.hl=n;render();}
+
+/* drag + click on stars */
+var drag=null,dragMoved=false;
+function svgPoint(e){var svg=document.getElementById("map"),pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var p=pt.matrixTransform(svg.getScreenCTM().inverse());return {x:Math.max(10,Math.min(W-10,p.x)),y:Math.max(10,Math.min(H-10,p.y))};}
+root.addEventListener("pointerdown",function(e){
+  var g=e.target.closest(".star");if(!g)return;
+  dragMoved=false;drag={n:+g.dataset.n,g:g,sx:e.clientX,sy:e.clientY};
+  if(state.editing){try{g.setPointerCapture(e.pointerId);}catch(_){}}
+});
+root.addEventListener("pointermove",function(e){
+  if(!drag||!state.editing)return;
+  if(Math.abs(e.clientX-drag.sx)+Math.abs(e.clientY-drag.sy)>4)dragMoved=true;
+  if(dragMoved){var p=svgPoint(e);drag.g.setAttribute("transform","translate("+p.x.toFixed(0)+","+p.y.toFixed(0)+")");drag.p=p;}
+});
+root.addEventListener("pointerup",function(){
+  if(!drag)return;var dr=drag;drag=null;
+  if(dragMoved&&state.editing&&dr.p){var d=door(dr.n);d.x=Math.round(dr.p.x);d.y=Math.round(dr.p.y);state.sel=dr.n;render();setTimeout(function(){dragMoved=false;},0);return;}
+  if(state.placing)return;
+  selectStar(dr.n);
+});
+
+/* ---------- import / export ---------- */
+function validate(o){
+  if(!o||!Array.isArray(o.doors))throw new Error("Es fehlt die Liste „doors“.");
+  var out=JSON.parse(JSON.stringify(state.draft||data));
+  ["year","title","intro","city"].forEach(function(k){if(o[k]!=null)out[k]=k==="year"?parseInt(o[k],10)||out.year:String(o[k]);});
+  o.doors.forEach(function(d){var n=parseInt(d.n,10);if(!(n>=1&&n<=24))return;var t=out.doors[n-1];
+    ["street","host","from","to","note"].forEach(function(k){if(d[k]!=null)t[k]=String(d[k]);});
+    if(isFinite(d.x)&&isFinite(d.y)){t.x=+d.x;t.y=+d.y;}});
+  return out;
+}
+function importJSON(){
+  var ta=document.getElementById("jsonin");
+  try{state.draft=validate(JSON.parse(ta.value));setMsg("Daten übernommen – noch nicht gespeichert.");}catch(err){setMsg("JSON konnte nicht gelesen werden: "+err.message,true);}
+  render();
+}
+function copyJSON(){
+  var txt=JSON.stringify(state.draft||data,null,2);
+  try{navigator.clipboard.writeText(txt).then(function(){setMsg("JSON in die Zwischenablage kopiert.");render();},function(){fallback();});}catch(_){fallback();}
+  function fallback(){setMsg("Kopieren nicht möglich – JSON steht unten im Feld.");render();var d=root.querySelector("details");if(d)d.open=true;var ta=document.getElementById("jsonin");if(ta){ta.value=txt;ta.select();}}
+}
+
+/* ---------- save: regenerate this page with new data and publish ---------- */
+function buildDoc(obj){
+  var css=document.getElementById("app-style").textContent;
+  var js=document.getElementById("app").textContent;
+  var json=JSON.stringify(obj).replace(/</g,"\\u003c");
+  var S="<"+"script",E="<"+"/script>";
+  return "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Lebendiger Adventskalender Marienthal</title>\n"+
+    "<style id=\"font-style\">"+document.getElementById("font-style").textContent+"</style>\n"+
+    "<style id=\"app-style\">"+css+"</style>\n</head>\n<body>\n<div id=\"root\"></div>\n"+
+    S+" type=\"application/json\" id=\"advent-data\">"+json+E+"\n"+S+" id=\"app\">"+js+E+"\n</body>\n</html>\n";
+}
+function save(){
+  var d=state.draft;
+  var missing=d.doors.filter(function(x){return !x.street.trim();}).length;
+  setMsg("Speichere …");render();
+  Promise.resolve(window.claude&&window.claude.use?window.claude.use("artifact"):null).then(function(art){
+    if(!art){setMsg("Speichern ist hier nicht verfügbar. Nutze „Als JSON kopieren“ und schick mir die Daten.",true);render();return;}
+    return art.publish(buildDoc(d)).then(function(){
+      data=d;state.editing=false;state.draft=null;setMsg("Gespeichert"+(missing?" ("+missing+" Türchen ohne Adresse)":"")+".");render();
+    });
+  }).catch(function(err){
+    var m=String(err&&(err.code||err.message)||err);
+    if(/not_granted|not_writer/.test(m))setMsg("Du hast keine Berechtigung, diese Seite zu ändern.",true);
+    else if(/conflict/.test(m))setMsg("Jemand anderes hat gerade gespeichert – die Seite lädt neu.",true);
+    else setMsg("Speichern fehlgeschlagen: "+m,true);
+    render();
+  });
+}
+
+
+/* ---------- Bewerbungs-Formular (Web3Forms) ---------- */
+function openApply(n){
+  closeApply();
+  var bg=document.createElement("div");bg.className="modal-bg";bg.id="apply-modal";
+  bg.innerHTML='<form class="modal" novalidate><button type="button" class="pop-x" data-close aria-label="Schließen">×</button>'+
+   '<div class="pop-day">Türchen '+n+' · '+esc(fmtDate(n))+'</div><h3>Jetzt bewerben</h3>'+
+   '<p class="msub">Du möchtest dieses Türchen übernehmen? Schick uns kurz deine Daten – wir melden uns.</p>'+
+   '<label>Name*<input name="name" required autocomplete="name"></label>'+
+   '<label>E-Mail*<input type="email" name="email" required autocomplete="email"></label>'+
+   '<label>Adresse (Straße & Hausnummer)*<input name="address" required autocomplete="street-address"></label>'+
+   '<label>Wunsch-Uhrzeit<input name="time" value="18.45–19.15 Uhr"></label>'+
+   '<label>Nachricht<textarea name="message" rows="3" placeholder="z. B. Punsch, Plätzchen, Feuerschale …"></textarea></label>'+
+   '<input type="checkbox" name="botcheck" tabindex="-1" style="display:none">'+
+   '<div class="fmsg"></div><button class="btn primary" type="submit">Absenden</button>'+
+   '<p class="privacy">Deine Angaben werden ausschließlich für die Organisation des Lebendigen Adventskalenders Marienthal genutzt.</p></form>';
+  document.body.appendChild(bg);
+  var f=bg.querySelector("form");
+  bg.addEventListener("click",function(e){if(e.target===bg||e.target.closest("[data-close]"))closeApply();});
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    var msg=f.querySelector(".fmsg"),btn=f.querySelector("button[type=submit]");
+    var v=function(k){return (f.elements[k].value||"").trim();};
+    if(!v("name")||!v("address")||!/^\S+@\S+\.\S+$/.test(v("email"))){msg.className="fmsg err";msg.textContent="Bitte Name, gültige E-Mail und Adresse ausfüllen.";return;}
+    if(f.elements.botcheck.checked)return;
+    btn.disabled=true;btn.textContent="Wird gesendet …";msg.textContent="";
+    fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify({access_key:W3F,subject:"Bewerbung Türchen "+n+" – Adventskalender Marienthal",from_name:"Adventskalender Marienthal",
+        "Türchen":n+" ("+fmtDate(n)+")",name:v("name"),email:v("email"),"Adresse":v("address"),"Wunsch-Uhrzeit":v("time"),message:v("message")})})
+    .then(function(r){return r.json();}).then(function(j){
+      if(!j.success)throw new Error(j.message||"Fehler");
+      f.innerHTML='<button type="button" class="pop-x" data-close aria-label="Schließen">×</button><div class="pop-day">Türchen '+n+'</div><h3>Danke!</h3><p class="msub">Deine Bewerbung ist angekommen. Wir melden uns bei dir.</p><button type="button" class="btn primary" data-close>Schließen</button>';
+    }).catch(function(){btn.disabled=false;btn.textContent="Absenden";msg.className="fmsg err";msg.textContent="Das Senden hat leider nicht geklappt. Bitte versuche es später noch einmal.";});
+  });
+  setTimeout(function(){var i=f.querySelector("input[name=name]");if(i)i.focus();},30);
+}
+function closeApply(){var m=document.getElementById("apply-modal");if(m)m.remove();}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeApply();});
+
+
+/* ---------- Weihnachts-Deko ---------- */
+var GARLAND=(function(){
+  var cols=[["#d23c34","#ff8a7f"],["#f5c451","#fff0b8"],["#eef4ee","#ffffff"],["#2f8a5a","#8fe0b0"]];
+  var s='<svg class="garland" viewBox="0 0 1120 130" aria-hidden="true">';
+  var d="M0 10";for(var k=0;k<8;k++)d+=" Q "+(70+140*k)+" 66 "+(140+140*k)+" 10";
+  s+='<path d="'+d+'" fill="none" stroke="#1f5a3a" stroke-width="9" stroke-linecap="round"/>';
+  s+='<path d="'+d+'" fill="none" stroke="#3f8a5c" stroke-width="15" stroke-dasharray="1.5 6" stroke-linecap="round"/>';
+  for(var i=0;i<8;i++){
+    var x=70+140*i,y=38,L=[14,30,20,36,18,28,12,32][i],c=cols[i%4],cy=y+L+15;
+    s+='<g class="bauble" style="animation-delay:-'+(i*0.45).toFixed(2)+'s"><line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+L)+'" stroke="#c9b07a" stroke-width="1.5"/>'+
+       '<rect x="'+(x-5)+'" y="'+(y+L-1)+'" width="10" height="7" rx="2" fill="#c9a24a"/>'+
+       '<circle cx="'+x+'" cy="'+cy+'" r="15" fill="'+c[0]+'"/>'+
+       '<path d="M'+(x-15)+' '+cy+' Q '+x+' '+(cy+7)+' '+(x+15)+' '+cy+'" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none"/>'+
+       '<ellipse cx="'+(x-5)+'" cy="'+(cy-6)+'" rx="4" ry="6" fill="'+c[1]+'" opacity=".7" transform="rotate(-30 '+(x-5)+' '+(cy-6)+')"/></g>';
+  }
+  for(var j=1;j<8;j+=2){var bx=140*j;
+    s+='<g class="bow" transform="translate('+bx+',12)"><path d="M0 0 L-16 -9 L-16 9 Z M0 0 L16 -9 L16 9 Z" fill="#d23c34"/><path d="M0 0 L-7 16 M0 0 L7 16" stroke="#d23c34" stroke-width="4" stroke-linecap="round"/><circle r="4.5" fill="#f5c451"/></g>';}
+  return s+'</svg>';
+})();
+var TREES=(function(){
+  var s='<svg class="trees" viewBox="0 0 1120 120" preserveAspectRatio="xMidYMax meet" aria-hidden="true">';
+  s+='<path d="M0 104 Q 140 84 280 100 T 560 98 T 840 100 T 1120 96 L1120 120 L0 120 Z" fill="#dfeee5" opacity=".16"/>';
+  var xs=[40,120,205,330,470,610,760,880,990,1075],hs=[70,95,60,85,100,75,92,62,88,70],lc=["#f5c451","#ff6a5e","#eef4ee"];
+  xs.forEach(function(x,i){var h=hs[i],w=h*.5,b=102;
+    s+='<rect x="'+(x-3)+'" y="'+(b-6)+'" width="6" height="8" fill="#4a3624"/>';
+    for(var t=0;t<3;t++){var ty=b-6-t*h*.27,tw=w*(1-t*.25);
+      s+='<path d="M'+(x-tw/2)+' '+ty+' L'+x+' '+(ty-h*.42)+' L'+(x+tw/2)+' '+ty+' Z" fill="'+(t%2?"#2a6b45":"#245c3c")+'"/>';
+      s+='<path d="M'+(x-tw/4)+' '+(ty-h*.21)+' L'+x+' '+(ty-h*.42)+' L'+(x+tw/4)+' '+(ty-h*.21)+' Z" fill="#eef4ee" opacity=".55"/>';
+      s+='<circle class="tl" cx="'+(x-tw/3+((i+t)%3)*tw/3)+'" cy="'+(ty-4)+'" r="2.6" fill="'+lc[(i+t)%3]+'" style="animation-delay:-'+(((i*3+t)*0.37)%2).toFixed(2)+'s"/>';}
+    s+='<path d="M'+x+' '+(b-6-h*.96)+' l2.4 5 5.4 .5 -4 3.6 1.2 5.3 -5 -2.8 -5 2.8 1.2 -5.3 -4 -3.6 5.4 -.5Z" fill="#f5c451"/>';
+  });
+  return s+'</svg>';
+})();
+var snowOn=true;
+try{var sv=localStorage.getItem("advent-snow");if(sv!==null)snowOn=sv==="1";}catch(_){}
+try{if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches&&localStorage.getItem("advent-snow")===null)snowOn=false;}catch(_){}
+var snow=(function(){
+  var cv=document.createElement("canvas");cv.id="snow";cv.setAttribute("aria-hidden","true");document.body.appendChild(cv);
+  var ctx=cv.getContext("2d"),fl=[],W0=0,H0=0,dpr=1,raf=0,t0=0;
+  function size(){dpr=Math.min(window.devicePixelRatio||1,2);W0=innerWidth;H0=innerHeight;cv.width=W0*dpr;cv.height=H0*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.min(130,Math.round(W0/11));while(fl.length<n)fl.push(mk(true));fl.length=n;}
+  function mk(any){var big=Math.random()<.12;return {x:Math.random()*W0,y:any?Math.random()*H0:-10,r:big?4+Math.random()*3:0.8+Math.random()*2.2,
+    vy:big?.45+Math.random()*.4:.35+Math.random()*.9,ph:Math.random()*6.28,sw:.3+Math.random()*.8,a:.35+Math.random()*.5,big:big,rot:Math.random()*6.28};}
+  function draw(t){var dt=Math.min(50,t-(t0||t));t0=t;ctx.clearRect(0,0,W0,H0);
+    for(var i=0;i<fl.length;i++){var f=fl[i];f.y+=f.vy*dt/16;f.ph+=.012*dt/16;f.x+=Math.sin(f.ph)*f.sw*.4;f.rot+=.004*dt;
+      if(f.y>H0+10||f.x<-20||f.x>W0+20){fl[i]=mk(false);continue;}
+      ctx.globalAlpha=f.a;
+      if(f.big){ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.rot);ctx.strokeStyle="#ffffff";ctx.lineWidth=1.2;ctx.lineCap="round";
+        for(var k=0;k<6;k++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,f.r*1.6);ctx.moveTo(0,f.r);ctx.lineTo(f.r*.5,f.r*1.35);ctx.moveTo(0,f.r);ctx.lineTo(-f.r*.5,f.r*1.35);ctx.stroke();}
+        ctx.restore();}
+      else{ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,6.283);ctx.fillStyle="#ffffff";ctx.fill();}}
+    ctx.globalAlpha=1;raf=requestAnimationFrame(draw);}
+  window.addEventListener("resize",size);
+  return {start:function(){if(raf)return;size();cv.style.display="block";t0=0;raf=requestAnimationFrame(draw);},
+          stop:function(){if(raf)cancelAnimationFrame(raf);raf=0;ctx.clearRect(0,0,W0,H0);cv.style.display="none";}};
+})();
+function setSnow(on){snowOn=on;try{localStorage.setItem("advent-snow",on?"1":"0");}catch(_){}if(on)snow.start();else snow.stop();}
+
+/* ---------- boot ---------- */
+render();
+if(snowOn)snow.start();
+(function(){var sc=root.querySelector(".mapscroll");if(sc&&sc.scrollWidth>sc.clientWidth+10){sc.scrollLeft=sc.scrollWidth*0.42-sc.clientWidth/2;}})();
+if(location.hash==="#admin"){state.canEdit=true;render();}
+if(window.claude&&window.claude.use){
+  window.claude.use("user").then(function(u){
+    if(!u)return null;return Promise.resolve(u.canEdit()).then(function(ok){if(ok){state.canEdit=true;if(!state.editing)render();}});
+  }).catch(function(){});
+}
+})();
+</script>
+<script id="gate">
+(function(){
+  "use strict";
+  var W3F = "1252e4e4-b5f2-48ac-87a4-d0547c6e60de"; /* Adventskalender-Formular, Empfänger hallo@marienthal-mittendrin.de */
+  var KEY = "advent-code";
+  var enc = JSON.parse(document.getElementById("advent-enc").textContent);
+  var form = document.getElementById("gate-form"), input = document.getElementById("gate-code"),
+      remember = document.getElementById("gate-remember"), err = document.getElementById("gate-err");
+  function b64(s){ var b = atob(s), u = new Uint8Array(b.length); for(var i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+  function decrypt(code){
+    if(!(window.crypto && crypto.subtle)) return Promise.reject(new Error("nocrypto"));
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"])
+      .then(function(base){ return crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(enc.salt), iterations:enc.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]); })
+      .then(function(k){ return crypto.subtle.decrypt({name:"AES-GCM", iv:b64(enc.iv)}, k, b64(enc.ct)); })
+      .then(function(buf){ return new TextDecoder().decode(buf); });
+  }
+  function start(json){
+    var d = document.createElement("script"); d.type = "application/json"; d.id = "advent-data"; d.textContent = json;
+    document.body.appendChild(d);
+    var src = document.getElementById("app-src").textContent;
+    var app = document.createElement("script"); app.id = "app"; app.textContent = src;
+    document.body.appendChild(app);
+  }
+  function tryCode(code, silent){
+    var btn = form.querySelector("button"); btn.disabled = true; btn.textContent = "Wird geöffnet …"; err.textContent = "";
+    return decrypt(code).then(function(json){
+      try{ if(remember.checked || silent) localStorage.setItem(KEY, code); }catch(_){}
+      start(json);
+    }).catch(function(e){
+      btn.disabled = false; btn.textContent = "Karte öffnen";
+      if(silent){ try{ localStorage.removeItem(KEY); }catch(_){} return; }
+      err.textContent = e && e.message === "nocrypto" ? "Dein Browser unterstützt das Entschlüsseln leider nicht. Bitte nutze einen aktuellen Browser." : "Der Code stimmt leider nicht. Achte auf Groß- und Kleinschreibung.";
+      input.focus(); input.select();
+    });
+  }
+  form.addEventListener("submit", function(e){ e.preventDefault(); var c = input.value.trim(); if(c) tryCode(c, false); });
+  try{ var saved = localStorage.getItem(KEY); if(saved) tryCode(saved, true); }catch(_){}
+
+  /* Zugang erfragen */
+  var ask = document.getElementById("gate-ask"), req = document.getElementById("gate-req"),
+      rerr = document.getElementById("req-err"), ok = document.getElementById("req-ok");
+  ask.addEventListener("click", function(){
+    var open = req.hidden; req.hidden = !open; ask.setAttribute("aria-expanded", String(open));
+    if(open) req.querySelector("input[name=name]").focus();
+  });
+  req.addEventListener("submit", function(e){
+    e.preventDefault(); rerr.textContent = "";
+    var f = req.elements, v = function(k){ return (f[k].value || "").trim(); };
+    if(!v("name") || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("email"))){ rerr.textContent = "Bitte Name und eine gültige E-Mail-Adresse angeben."; return; }
+    if(!f.einwilligung.checked){ rerr.textContent = "Bitte bestätige die Einwilligung."; return; }
+    if(f.botcheck.checked) return;
+    var btn = req.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Wird gesendet …";
+    fetch("https://api.web3forms.com/submit", {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body: JSON.stringify({access_key: W3F, subject: "Zugangsanfrage Adventskalender: " + v("name"), from_name: "marienthal-mittendrin.de",
+        replyto: v("email"), Name: v("name"), "E-Mail": v("email"), Straße: v("strasse"), Nachricht: v("nachricht")})})
+    .then(function(r){ return r.json(); }).then(function(j){
+      if(!j.success) throw new Error("fail");
+      req.hidden = true; ask.hidden = true; ok.hidden = false;
+    }).catch(function(){ rerr.textContent = "Senden hat nicht geklappt. Schreib uns gern direkt an hallo@marienthal-mittendrin.de."; })
+    .then(function(){ btn.disabled = false; btn.textContent = "Anfrage senden"; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>News aus Marienthal · marienthal mittendrin</title>
+<meta name="description" content="Alle News aus Hamburg-Marienthal: Baustellen, Hinweise, Tipps und Neuigkeiten aus der Nachbarschaft – nach Monaten sortiert.">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+.eyebrow{margin:0 0 10px;font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red)}
+.hero{background:var(--navy);color:#fff}
+.hero .wrap{padding-top:64px;padding-bottom:72px}
+.hero h1{color:#fff;font-size:clamp(40px,6vw,72px);letter-spacing:-1.5px;line-height:1;margin:0 0 20px}
+.hero p{font-size:19px;line-height:1.55;color:#DCE4EC;max-width:620px;margin:0}
+.hero .eyebrow{color:#F4A6B2}
+.back{display:inline-block;color:#DCE4EC;font-size:15px;text-decoration:none;padding:8px 0;margin-bottom:24px}
+.back:hover{color:#fff}
+.btn{display:inline-block;font:inherit;font-weight:600;font-size:16px;text-decoration:none;border-radius:999px;padding:15px 26px;cursor:pointer;border:0}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{color:#fff;background:#A50D25}
+.btn-ghost{color:#fff;border:1.5px solid rgba(255,255,255,.5);padding:13.5px 24px;margin-left:8px}.btn-ghost:hover{color:#fff;border-color:#fff}
+.page{max-width:880px;padding-top:56px;padding-bottom:88px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 40px}
+.filters button{font:inherit;font-size:15px;font-weight:600;min-height:44px;padding:10px 16px;border-radius:999px;border:1.5px solid #C9D3DD;background:#fff;color:var(--navy);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.month{margin:0 0 40px}
+.month h2{font-size:26px;margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.month ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.month li{background:var(--soft);border-radius:16px;padding:20px 22px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.month li.old{opacity:.72}
+.badge{flex:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:#E4EEF8;color:var(--navy)}
+.b-Baustelle{background:#FFF1D6;color:#7A4B00}.b-Mitmachen{background:#FDE7EA;color:#A10D25}.b-Neu{background:#E7F2EC;color:#1E5B3E}.b-Lesetipp{background:#F1E9F7;color:#5B2A6B}.b-Tipp{background:#FFF4D1;color:#7A5300}
+.c{flex:1 1 300px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.c b{font-weight:600;font-size:18px}
+.c span{font-size:15px;line-height:1.55;color:var(--muted)}
+.c span a{color:var(--muted)}
+.c a.cta{color:#A10D25;font-weight:600}
+.dt{font-size:14px;color:var(--muted);white-space:nowrap}
+.over{display:inline-block;font-size:12px;font-weight:600;color:var(--muted);border:1px solid #C9D3DD;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:2px}
+.vid{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;text-decoration:none;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 8px;font-size:14px;font-weight:600}
+.vid i{width:28px;height:28px;border-radius:999px;background:var(--navy);display:flex;align-items:center;justify-content:center}
+.empty{color:var(--muted);font-size:17px}
+@media (max-width:600px){
+  .hero .wrap{padding-top:40px;padding-bottom:56px}
+  .btn-ghost{margin:10px 0 0}
+  .page{padding-top:40px;padding-bottom:64px}
+  .month li{padding:18px;gap:12px}
+  .dt{width:100%;order:3}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#C8102E"/><path d="M7 33V9h3v3h2V9h3v3l5 9 5-9V9h3v3h2V9h3v24H22.5v-4.5a2.5 2.5 0 0 0-5 0V33Z" fill="#fff"/></svg><span><b>marienthal mittendrin</b><small>Nachbarschaft in Hamburg-Wandsbek</small></span></a>
+  <nav aria-label="Hauptnavigation"><a href="/#veranstaltungen">Veranstaltungen</a><a href="/marienthal-news/" aria-current="page" style="color:#C8102E;font-weight:600">News</a><a href="/#brett">Schwarzes Brett</a><a href="/ueber-marienthal/">Über Marienthal</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+  <a class="back" href="/">← Startseite</a>
+  <p class="eyebrow">News</p>
+  <h1>Aus dem Viertel</h1>
+  <p>Baustellen, Hinweise und Neuigkeiten aus Marienthal – alle Meldungen auf einen Blick, nach Monaten sortiert.</p>
+  <p style="margin-top:28px"><a class="btn btn-red" href="/?melden=News-Hinweis">Hinweis melden</a></p>
+</div></section>
+
+<div class="wrap page">
+  <div class="filters" id="filters" role="group" aria-label="Nach Kategorie filtern"></div>
+  <div id="months" aria-live="polite"><p class="empty">Lade Meldungen …</p></div>
+  <section class="month" id="dauerhaft" hidden><h2>Lesetipps zum Stadtteil</h2><ul></ul></section>
+  <p style="margin-top:48px"><a class="btn" href="/" style="border:1.5px solid #0E2A47;color:#0E2A47;padding:13.5px 24px">← Zurück zu marienthal-mittendrin.de</a></p>
+</div>
+</main>
+
+<footer class="foot"><div class="wrap"><span>© 2026 marienthal mittendrin · Hamburg-Marienthal</span><span><a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span></div></footer>
+
+<script>
+(function(){
+  var today = new Date(); today.setHours(0,0,0,0);
+  var MONATE = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  function day(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function safeUrl(u){ return /^(https?:\/\/|\/)/.test(u||"") ? u : "#"; }
+  function fmt(s){ var d=day(s); return ("0"+d.getDate()).slice(-2)+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+d.getFullYear(); }
+  function item(n){
+    var old = n.bis && day(n.bis) < today, extra = "";
+    if(n.link) extra += ' <a class="cta" href="'+esc(safeUrl(n.link))+'"'+(/^https?:/.test(n.link)?' rel="noopener"':'')+'>'+esc(n.linktext||"Mehr")+'</a>';
+    if(n.quelle) extra += ' <a href="'+esc(safeUrl(n.quelle))+'" rel="noopener">Quelle</a>';
+    var vid = n.video ? '<a class="vid" href="'+esc(safeUrl(n.video))+'" rel="noopener"><i><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="#fff"/></svg></i>'+esc(n.videotext||"Video ansehen")+'</a>' : "";
+    return '<li class="'+(old?'old':'')+'"><span class="badge b-'+esc(n.kategorie)+'">'+esc(n.kategorie)+'</span><span class="c"><b>'+esc(n.titel)+(old?'<span class="over">abgelaufen</span>':'')+'</b><span>'+esc(n.text)+extra+'</span>'+vid+'</span><span class="dt">'+(n.datum?fmt(n.datum):"")+'</span></li>';
+  }
+  var all = [], filter = "Alle";
+  function render(){
+    var list = all.filter(function(n){ return !n.immerUnten && (filter==="Alle" || n.kategorie===filter); })
+                  .sort(function(a,b){ return (b.datum||"").localeCompare(a.datum||""); });
+    var groups = [], idx = {};
+    list.forEach(function(n){
+      var k = n.datum ? n.datum.slice(0,7) : "ohne";
+      if(!(k in idx)){ idx[k] = groups.length; groups.push({k:k, items:[]}); }
+      groups[idx[k]].items.push(n);
+    });
+    var box = document.getElementById("months");
+    box.innerHTML = groups.length ? groups.map(function(g){
+      var title = g.k==="ohne" ? "Ohne Datum" : MONATE[+g.k.slice(5,7)-1] + " " + g.k.slice(0,4);
+      return '<section class="month"><h2>'+title+'</h2><ul>'+g.items.map(item).join("")+'</ul></section>';
+    }).join("") : '<p class="empty">In dieser Kategorie gibt es gerade keine Meldungen.</p>';
+    var perm = all.filter(function(n){ return n.immerUnten && (filter==="Alle" || n.kategorie===filter); });
+    var d = document.getElementById("dauerhaft");
+    d.hidden = !perm.length; d.querySelector("ul").innerHTML = perm.map(item).join("");
+  }
+  fetch("/daten/news.json", {cache:"no-cache"}).then(function(r){return r.json();}).then(function(list){
+    all = list;
+    var cats = ["Alle"]; list.forEach(function(n){ if(cats.indexOf(n.kategorie)<0) cats.push(n.kategorie); });
+    var f = document.getElementById("filters");
+    f.innerHTML = cats.map(function(c){ return '<button type="button" aria-pressed="'+(c==="Alle")+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>'; }).join("");
+    f.addEventListener("click", function(e){
+      var b = e.target.closest("button"); if(!b) return;
+      filter = b.dataset.cat;
+      f.querySelectorAll("button").forEach(function(x){ x.setAttribute("aria-pressed", String(x===b)); });
+      render();
+    });
+    render();
+  }).catch(function(){ document.getElementById("months").innerHTML = '<p class="empty">Meldungen konnten nicht geladen werden.</p>'; });
+})();
+</script>
+</body>
+</html>

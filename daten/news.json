@@ -1,0 +1,53 @@
+[
+  {
+    "kategorie": "Tipp",
+    "titel": "Husaren Honig Hamburg",
+    "text": "Honig aus der Nachbarschaft von Nina Beckmann – Neuigkeiten, Sorten und Verkauf gibt's auf Instagram.",
+    "link": "https://www.instagram.com/husarenhonig/",
+    "linktext": "@husarenhonig auf Instagram",
+    "datum": "2026-11-21",
+    "bis": "2027-03-31"
+  },
+  {
+    "kategorie": "Mitmachen",
+    "titel": "Adventskalender: Türchen 2 sucht noch Gastgeber",
+    "text": "Für Mittwoch, 2. Dezember, ist noch kein Haus gefunden. Schnell sein lohnt sich!",
+    "link": "/adventskalender-marienthal/",
+    "linktext": "Jetzt bewerben",
+    "datum": "2026-11-20",
+    "bis": "2026-12-01"
+  },
+  {
+    "kategorie": "Baustelle",
+    "titel": "Rodigallee-Umbau: Konditorei Töllner bangt um ihre Existenz",
+    "text": "Seit der Baustelle ist der Umsatz des Familienbetriebs um die Hälfte eingebrochen. Das Hamburg Journal hat nachgefragt.",
+    "video": "https://www.ndr.de/fernsehen/sendungen/hamburg_journal/umbau-der-rodigallee-familienbetrieb-bangt-um-existenz,hamj-16570.html",
+    "videotext": "Video ansehen · NDR, 2 Min.",
+    "datum": "2026-11-16",
+    "bis": "2027-01-31"
+  },
+  {
+    "kategorie": "Baustelle",
+    "titel": "Fußgängertunnel am Bahnhof Wandsbek weiter gesperrt",
+    "text": "Die Deutsche Bahn hat die Sperrung der Personenunterführung bis 30. November bestätigt.",
+    "quelle": "https://www.wandsbeker-gehoelz.de/",
+    "datum": "2026-11-09",
+    "bis": "2026-11-30"
+  },
+  {
+    "kategorie": "Baustelle",
+    "titel": "S4-Bau: Unterführung Bovestraße bis Jahresende dicht",
+    "text": "Die Straßenunterführung Bovestraße bleibt bis 31.12.2026 gesperrt.",
+    "quelle": "https://www.wandsbeker-gehoelz.de/",
+    "datum": "2026-08-15",
+    "bis": "2026-12-31"
+  },
+  {
+    "kategorie": "Lesetipp",
+    "titel": "Gehölznachrichten",
+    "text": "Die Stadtteilzeitung rund ums Wandsbeker Gehölz – mit Neuigkeiten, Terminen und Geschichten aus Marienthal und Wandsbek.",
+    "link": "https://www.gehoelznachrichten.de/",
+    "linktext": "Zu den Gehölznachrichten",
+    "immerUnten": true
+  }
+]
