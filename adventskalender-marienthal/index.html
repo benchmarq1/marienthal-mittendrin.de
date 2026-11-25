@@ -51,6 +51,7 @@ h1{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(28px,4.4vw,46px)
 .pop.below{transform:translate(-50%,22px)}
 .pop::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:#fffaf0;transform:translateX(-50%) rotate(45deg)}
 .pop.below::after{bottom:auto;top:-7px}
+.pop.side::after{display:none}
 .pop-day{font-size:12px;font-weight:600;color:#b3261e;text-transform:uppercase;letter-spacing:.08em;padding-right:22px}
 .pop-addr{font-family:"Fraunces",serif;font-size:21px;font-weight:700;margin:6px 0 2px;line-height:1.15}
 .pop-city{font-size:13px;color:#6b5c40}
@@ -59,6 +60,14 @@ h1{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(28px,4.4vw,46px)
 .pop-note{margin-top:6px;font-size:14px;color:#4b3f2a;line-height:1.4}
 .pop a{display:inline-block;margin-top:10px;font-size:13px;color:#b3261e;font-weight:600;text-decoration:none;border-bottom:1px solid #e9a39d}
 .pop-x{position:absolute;top:8px;right:8px;border:0;background:transparent;font-size:20px;line-height:1;color:#8b7a5a;cursor:pointer;padding:4px 6px}
+.pop-cal{margin-top:12px;padding-top:12px;border-top:1px solid #e6dcc4;display:flex;flex-direction:column;gap:8px}
+.pop-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin:0;padding:0 10px;box-sizing:border-box}
+.pop .pop-btn svg{flex:none;display:inline-block;width:20px;height:20px;min-width:0}
+.pop-btn.primary{border:0;background:#b3261e;color:#fff;min-height:48px;font-size:16px}
+.pop-btn.primary:hover{background:#8e1c16}
+.pop-btn.ghost{border:2px solid #b3261e;background:transparent;color:#b3261e}
+.pop-btn.ghost:hover{background:#b3261e14}
+.pop-hint{font-size:12px;color:#5e5242;text-align:center;line-height:1.35}
 h2{font-family:"Fraunces",serif;font-size:22px;margin:34px 0 12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .door{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;color:var(--text);font:inherit;transition:border-color .15s,transform .15s}
@@ -123,6 +132,7 @@ footer{margin-top:40px;color:#7f9d89;font-size:12px}
   .mapcard svg{min-width:1000px}
   .pop,.pop.below{position:fixed;left:12px!important;right:12px;top:auto!important;bottom:12px;width:auto;transform:none}
   .pop::after{display:none}
+  .pop,.pop.below{max-height:calc(100vh - 24px);overflow-y:auto}
   .status{white-space:normal}
 }
 
@@ -448,6 +458,21 @@ function render(){
   root.innerHTML=h;
   var nsc=root.querySelector(".mapscroll");if(nsc&&sl)nsc.scrollLeft=sl;
   if(state.hl){var r=root.querySelector('.row[data-row="'+state.hl+'"]');if(r)r.scrollIntoView({block:"nearest",behavior:"smooth"});state.hl=null;}
+  fitPopup();
+}
+/* Das Popup ist mit den Kalender-Buttons höher: oben/unten tauschen, sonst seitlich neben den Stern setzen */
+function fitPopup(){
+  var p=root.querySelector(".pop"),c=document.getElementById("mapcard"),d=state.sel!=null?door(state.sel):null;if(!p||!c||!d)return;
+  if(getComputedStyle(p).position==='fixed')return;
+  var cr=c.getBoundingClientRect();
+  function fits(){var r=p.getBoundingClientRect();return r.top>=cr.top+4&&r.bottom<=cr.bottom-4;}
+  if(fits())return;
+  p.classList.toggle("below");if(fits())return;
+  p.classList.remove("below");p.classList.add("side");
+  var cx=cr.width*parseFloat(p.style.left)/100,ty=cr.height*parseFloat(p.style.top)/100,pw=p.offsetWidth,ph=p.offsetHeight;
+  var x=cx+30+pw<=cr.width-8?cx+30:cx-30-pw;
+  x=Math.max(8,Math.min(x,cr.width-pw-8));
+  p.style.left=x+"px";p.style.top=Math.max(8,Math.min(ty-ph/2,cr.height-ph-8))+"px";p.style.transform="none";
 }
 function msgHTML(){return state.msg?'<span class="msg'+(state.msgErr?" err":"")+'">'+esc(state.msg)+'</span>':"";}
 function popupHTML(){
@@ -462,7 +487,63 @@ function popupHTML(){
     '<div class="pop-time">'+esc(timeText(d))+'</div>'+
     (d.note?'<div class="pop-note">'+esc(d.note)+'</div>':"")+
     (d.street?'<a href="'+esc(mapsLink(d))+'" target="_blank" rel="noopener">In Google Maps öffnen ↗</a>':"")+
+    (hasEvent(d)&&!state.editing?'<div class="pop-cal"><button type="button" class="pop-btn primary" data-ics="'+d.n+'">'+ICO_CAL+'Zum Kalender hinzufügen</button>'+
+      '<button type="button" class="pop-btn ghost" data-ics="all">'+ICO_DL+'Alle '+eventCount()+' Termine laden</button>'+
+      '<div class="pop-hint">Für Google, Apple, Outlook und mehr (.ics-Datei)</div></div>':"")+
   '</div>';
+}
+
+/* ---------- Kalender-Download (.ics) ---------- */
+var ICO_CAL='<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>';
+var ICO_DL='<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
+/* Termin gibt es erst, wenn Gastgeber, Adresse und Startzeit eingetragen sind */
+function hasEvent(d){return !!(d&&d.street&&d.host&&/^\d{1,2}:\d{2}$/.test(d.from||""));}
+function eventCount(){return cur().doors.filter(hasEvent).length;}
+function icsEsc(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n");}
+function icsFold(line){
+  var out=[],buf="",bytes=0;
+  Array.from(line).forEach(function(ch){
+    var b=unescape(encodeURIComponent(ch)).length;
+    if(bytes+b>74){out.push(buf);buf=" "+ch;bytes=1+b;}else{buf+=ch;bytes+=b;}
+  });
+  out.push(buf);return out.join("\r\n");
+}
+function mins(t){var p=t.split(":");return (+p[0])*60+(+p[1]);}
+function p2(n){return (n<10?"0":"")+n;}
+function icsLocal(n,m){var dt=dateOf(n);return ""+dt.getFullYear()+p2(dt.getMonth()+1)+p2(dt.getDate())+"T"+p2(Math.floor(m/60))+p2(m%60)+"00";}
+function icsEvent(d,stamp){
+  var s=mins(d.from),e=/^\d{1,2}:\d{2}$/.test(d.to||"")?mins(d.to):s+120;
+  if(e<=s)e=Math.min(s+120,23*60+59);
+  var desc=(d.note?d.note+"\n":"")+"Lebendiger Adventskalender Hamburg-Marienthal – alle sind herzlich eingeladen.";
+  return ["BEGIN:VEVENT",
+    "UID:advent-"+cur().year+"-"+d.n+"@marienthal-mittendrin.de",
+    "DTSTAMP:"+stamp,
+    "DTSTART;TZID=Europe/Berlin:"+icsLocal(d.n,s),
+    "DTEND;TZID=Europe/Berlin:"+icsLocal(d.n,e),
+    "SUMMARY:"+icsEsc("Adventskalender Türchen "+d.n+" bei "+d.host),
+    "LOCATION:"+icsEsc(d.street+", "+cur().city),
+    "DESCRIPTION:"+icsEsc(desc),
+    "END:VEVENT"];
+}
+function buildICS(list){
+  var now=new Date(),stamp=""+now.getUTCFullYear()+p2(now.getUTCMonth()+1)+p2(now.getUTCDate())+"T"+p2(now.getUTCHours())+p2(now.getUTCMinutes())+p2(now.getUTCSeconds())+"Z";
+  var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//marienthal mittendrin//Adventskalender//DE","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+    "X-WR-CALNAME:Adventskalender Marienthal "+cur().year,"X-WR-TIMEZONE:Europe/Berlin",
+    "BEGIN:VTIMEZONE","TZID:Europe/Berlin",
+    "BEGIN:STANDARD","DTSTART:19701025T030000","TZOFFSETFROM:+0200","TZOFFSETTO:+0100","TZNAME:CET","RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU","END:STANDARD",
+    "BEGIN:DAYLIGHT","DTSTART:19700329T020000","TZOFFSETFROM:+0100","TZOFFSETTO:+0200","TZNAME:CEST","RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU","END:DAYLIGHT",
+    "END:VTIMEZONE"];
+  list.forEach(function(d){L=L.concat(icsEvent(d,stamp));});
+  L.push("END:VCALENDAR");
+  return L.map(icsFold).join("\r\n")+"\r\n";
+}
+function downloadICS(which){
+  var list=which==="all"?cur().doors.filter(hasEvent).sort(function(a,b){return a.n-b.n;}):[door(+which)].filter(hasEvent);
+  if(!list.length)return;
+  var name=which==="all"?"adventskalender-marienthal-"+cur().year+".ics":"adventskalender-tuerchen-"+list[0].n+".ics";
+  var blob=new Blob([buildICS(list)],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob);
+  var a=document.createElement("a");a.href=url;a.download=name;a.style.display="none";document.body.appendChild(a);a.click();
+  setTimeout(function(){a.remove();URL.revokeObjectURL(url);},1500);
 }
 function adminHTML(){
   var c=state.draft,h='<div class="admin"><h3>Adressen verwalten</h3>';
@@ -490,6 +571,7 @@ function setMsg(t,err){state.msg=t;state.msgErr=!!err;}
 /* ---------- events ---------- */
 root.addEventListener("click",function(e){
   var ap=e.target.closest("[data-apply]");if(ap){openApply(+ap.dataset.apply);return;}
+  var ics=e.target.closest("[data-ics]");if(ics){downloadICS(ics.dataset.ics);return;}
   var t=e.target.closest("[data-act],[data-door],[data-place]");
   if(t){
     if(t.dataset.door){state.sel=+t.dataset.door;render();var m=document.getElementById("mapcard");if(m)m.scrollIntoView({behavior:"smooth",block:"start"});return;}
