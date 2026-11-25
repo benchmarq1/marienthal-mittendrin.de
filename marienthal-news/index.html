@@ -40,6 +40,7 @@
 .over{display:inline-block;font-size:12px;font-weight:600;color:var(--muted);border:1px solid #C9D3DD;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:2px}
 .vid{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;text-decoration:none;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 8px;font-size:14px;font-weight:600}
 .vid i{width:28px;height:28px;border-radius:999px;background:var(--navy);display:flex;align-items:center;justify-content:center}
+.pic{margin:10px 0 0;max-width:360px}.pic img{display:block;width:100%;height:auto;border-radius:12px}.pic figcaption{font-size:12px;color:var(--muted);margin-top:6px}
 .empty{color:var(--muted);font-size:17px}
 @media (max-width:600px){
   .hero .wrap{padding-top:40px;padding-bottom:56px}
@@ -82,13 +83,14 @@
   function day(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
   function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
   function safeUrl(u){ return /^(https?:\/\/|\/)/.test(u||"") ? u : "#"; }
+  function img(n){ return n.bild ? '<figure class="pic"><img src="'+esc(safeUrl(n.bild))+'" alt="'+esc(n.bildtext||n.titel)+'" loading="lazy" width="1200" height="1200">'+(n.bildtext?'<figcaption>'+esc(n.bildtext)+'</figcaption>':'')+'</figure>' : ""; }
   function fmt(s){ var d=day(s); return ("0"+d.getDate()).slice(-2)+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+d.getFullYear(); }
   function item(n){
     var old = n.bis && day(n.bis) < today, extra = "";
     if(n.link) extra += ' <a class="cta" href="'+esc(safeUrl(n.link))+'"'+(/^https?:/.test(n.link)?' rel="noopener"':'')+'>'+esc(n.linktext||"Mehr")+'</a>';
     if(n.quelle) extra += ' <a href="'+esc(safeUrl(n.quelle))+'" rel="noopener">Quelle</a>';
     var vid = n.video ? '<a class="vid" href="'+esc(safeUrl(n.video))+'" rel="noopener"><i><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="#fff"/></svg></i>'+esc(n.videotext||"Video ansehen")+'</a>' : "";
-    return '<li class="'+(old?'old':'')+'"><span class="badge b-'+esc(n.kategorie)+'">'+esc(n.kategorie)+'</span><span class="c"><b>'+esc(n.titel)+(old?'<span class="over">abgelaufen</span>':'')+'</b><span>'+esc(n.text)+extra+'</span>'+vid+'</span><span class="dt">'+(n.datum?fmt(n.datum):"")+'</span></li>';
+    return '<li class="'+(old?'old':'')+'"><span class="badge b-'+esc(n.kategorie)+'">'+esc(n.kategorie)+'</span><span class="c"><b>'+esc(n.titel)+(old?'<span class="over">abgelaufen</span>':'')+'</b><span>'+esc(n.text)+extra+'</span>'+vid+img(n)+'</span><span class="dt">'+(n.datum?fmt(n.datum):"")+'</span></li>';
   }
   var all = [], filter = "Alle";
   function render(){
