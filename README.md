@@ -6,6 +6,7 @@ Nachbarschaftsportal für Hamburg-Marienthal, veröffentlicht über GitHub Pages
 
 - `index.html` – Startseite
 - `adventskalender-marienthal/` – Karte zum Lebendigen Adventskalender (Daten im Block `advent-data` in `index.html`, Positionen über `#admin`)
+- `adventskranz2026/` – Foto-Wettbewerb „Der schönste Adventskranz“ (PollUnit-Einbettung erst nach Klick; Termine im Skript am Seitenende)
 - `weihnachtsmesse/` – Infoseite zur Marienthaler Weihnachtsmesse
 - `marienthal-news/` – alle News nach Monaten (Startseite zeigt nur die 4 neuesten)
 - `ueber-marienthal/` – Stadtteilgeschichte

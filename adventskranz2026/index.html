@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Der schönste Adventskranz in Marienthal 2026 · marienthal mittendrin</title>
+<meta name="description" content="Foto-Wettbewerb in Hamburg-Marienthal: Kranz fotografieren, hochladen und abstimmen. Upload 29.11.–14.12., Abstimmung 15.–20.12.2026.">
+<meta property="og:title" content="Der schönste Adventskranz in Marienthal 2026">
+<meta property="og:description" content="Foto hochladen, Nachbarn stimmen ab: Upload 29.11.–14.12., Abstimmung 15.–20.12.2026.">
+<meta property="og:image" content="https://marienthal-mittendrin.de/adventskranz2026/img/adventskranz-banner.jpg">
+<meta property="og:type" content="website">
+<style>
+/* Schriften lokal eingebunden (kein Google-Fonts-Abruf, DSGVO-freundlich) – SIL Open Font License */
+@font-face{font-family:"Fraunces";src:url(fonts/fraunces-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Fraunces";src:url(fonts/fraunces-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Work Sans";src:url(fonts/work-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+
+:root{
+  --bg:#0a1f15; --panel:#11301f; --panel2:#16412a; --text:#eef4ee; --muted:#a7bfae;
+  --gold:#f5c451; --gold-soft:#fbe3a1; --red:#d23c34; --red-hi:#ff6a5e; --line:#21472f;
+  --paper:#fffaf0; --ink:#2a2112; --ink-muted:#6b5c40; --red-ink:#b3261e;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Work Sans",system-ui,sans-serif}
+body{
+  min-height:100vh;line-height:1.55;
+  background:
+    radial-gradient(1200px 500px at 70% -10%,#16422b 0%,transparent 60%),
+    radial-gradient(800px 400px at 0% 0%,#123a26 0%,transparent 55%),var(--bg);
+}
+a{color:var(--gold-soft)}
+a:hover{color:#fff}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+/* Kopf */
+.top{padding:22px 0 0}
+.back{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;text-decoration:none;color:var(--muted)}
+.back:hover{color:var(--gold-soft)}
+.hero{padding:30px 0 10px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--red-hi);font-weight:600;margin:0}
+h1{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(32px,5.6vw,56px);line-height:1.05;margin:10px 0 14px;letter-spacing:-.01em}
+h1 .gold{color:var(--gold)}
+.lead{color:var(--muted);font-size:clamp(16px,2vw,18px);max-width:640px;margin:0 0 20px}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;
+  background:var(--red);color:#fff;font:600 16px "Work Sans",sans-serif;text-decoration:none;border:0;cursor:pointer;
+  box-shadow:0 8px 24px rgba(210,60,52,.35);transition:background .15s,transform .15s;
+}
+.btn:hover{background:#b9302a;color:#fff;transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:progress;transform:none}
+.btn.ghost{background:transparent;border:2px solid var(--red-ink);color:var(--red-ink);box-shadow:none}
+.btn.ghost:hover{background:#b3261e14;color:var(--red-ink)}
+.status{
+  display:inline-flex;align-items:center;gap:8px;background:rgba(245,196,81,.12);border:1px solid rgba(245,196,81,.45);
+  color:var(--gold-soft);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:500;
+}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+/* Banner */
+.banner{margin:28px 0 0;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.banner img{display:block;width:100%;height:auto}
+
+h2{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(24px,3.4vw,32px);line-height:1.15;margin:0 0 6px}
+section{padding:46px 0 0}
+.sub{color:var(--muted);margin:0 0 20px;max-width:640px}
+
+/* Ablauf */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{
+  position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 18px 18px;counter-increment:s;
+}
+.steps li::before{
+  content:counter(s);position:absolute;top:-14px;left:16px;width:30px;height:30px;border-radius:50%;
+  background:var(--gold);color:#3a2600;font:700 16px "Fraunces",serif;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.35)
+}
+.steps .when{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red-hi);font-weight:600;margin:6px 0 4px}
+.steps h3{font-family:"Fraunces",serif;font-size:20px;margin:0 0 6px;line-height:1.2}
+.steps p{margin:0;color:var(--muted);font-size:15px}
+
+/* Preise */
+.prizes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;list-style:none;margin:0;padding:0}
+.prizes li{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:18px}
+.prizes .rank{font-family:"Fraunces",serif;font-weight:700;font-size:30px;color:var(--gold);line-height:1}
+.prizes .rank small{font-family:"Work Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:600}
+.prizes p{margin:8px 0 0;font-size:16px}
+
+/* Mitmachen-Feld */
+.stage{background:var(--paper);color:var(--ink);border-radius:20px;padding:clamp(18px,3.4vw,30px);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.stage h2{color:var(--ink)}
+.stage .sub{color:var(--ink-muted)}
+.hint{font-size:13.5px;color:var(--ink-muted);line-height:1.5;margin:14px 0 0}
+.hint a{color:var(--red-ink);font-weight:600}
+.loader{border:2px dashed #e0cfa6;border-radius:14px;padding:26px 20px;text-align:center;background:#fff7e3}
+.loader p{margin:0 0 16px;color:var(--ink)}
+#embed{min-height:320px}
+#embed[hidden]{display:none}
+#embed iframe{width:100%;border:0;display:block}
+.laden-info{color:var(--ink-muted);font-size:15px;padding:30px 10px;text-align:center}
+
+/* Regeln & Datenschutz */
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.rules li{position:relative;padding:12px 16px 12px 44px;background:var(--panel);border:1px solid var(--line);border-radius:12px;font-size:16px}
+.rules li::before{content:"";position:absolute;left:16px;top:17px;width:14px;height:14px;background:var(--gold);
+  clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.privacy{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.privacy h2{font-size:22px}
+.privacy ul{margin:10px 0 0;padding-left:20px;color:var(--muted)}
+.privacy li{margin:8px 0}
+.privacy li b{color:var(--text);font-weight:600}
+
+footer{margin-top:60px;border-top:1px solid var(--line);padding:26px 0 40px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
+footer a{color:var(--muted)}
+footer a:hover{color:var(--gold-soft)}
+
+/* sanfter Schneefall (nur Deko, respektiert reduzierte Bewegung) */
+.snow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.snow i{position:absolute;top:-10px;width:5px;height:5px;border-radius:50%;background:#fff;opacity:.55;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) translateX(30px)}}
+@media (prefers-reduced-motion:reduce){.snow{display:none}html{scroll-behavior:auto}}
+.page{position:relative;z-index:1}
+
+@media (max-width:760px){
+  .steps,.prizes{grid-template-columns:1fr}
+  .steps{gap:22px}
+  section{padding-top:38px}
+}
+</style>
+</head>
+<body>
+<div class="snow" aria-hidden="true" id="snow"></div>
+<div class="page">
+<div class="wrap">
+  <div class="top"><a class="back" href="/">← marienthal-mittendrin.de</a></div>
+
+  <header class="hero">
+    <p class="eyebrow">Mitmachen · 29. November bis 20. Dezember 2026</p>
+    <h1>Der schönste <span class="gold">Adventskranz</span> in Marienthal</h1>
+    <p class="lead">Wir suchen den schönsten Adventskranz im Viertel. Foto hochladen, die Nachbarschaft stimmt ab – der Kranz mit den meisten Stimmen gewinnt.</p>
+    <div class="cta-row">
+      <a class="btn" href="#mitmachen">Jetzt mitmachen</a>
+      <span class="status" id="status" role="status">Los geht’s am 29. November</span>
+    </div>
+    <div class="banner"><img src="img/adventskranz-banner.jpg" width="1200" height="630" alt="Illustration eines Adventskranzes mit vier brennenden Kerzen und roter Schleife auf dunkelgrünem Grund mit goldenen Sternen"></div>
+  </header>
+
+  <section aria-labelledby="ablauf">
+    <h2 id="ablauf">So läuft es ab</h2>
+    <p class="sub">Zwei Phasen, damit alle Kränze die gleiche Chance haben.</p>
+    <ol class="steps">
+      <li>
+        <p class="when">29.11. – 14.12.</p>
+        <h3>Kranz hochladen</h3>
+        <p>Ein Foto von deinem Adventskranz, gern mit brennenden Kerzen. Pro Person ein Kranz.</p>
+      </li>
+      <li>
+        <p class="when">15.12. – 20.12.</p>
+        <h3>Abstimmen</h3>
+        <p>Alle Nachbarn dürfen abstimmen: eine Stimme pro Person, bestätigt per E-Mail. Für den eigenen Kranz geht das nicht.</p>
+      </li>
+      <li>
+        <p class="when">Danach</p>
+        <h3>Gewinnen</h3>
+        <p>Der Kranz mit den meisten Stimmen gewinnt. Den Sieger geben wir nach Ende der Abstimmung hier bekannt.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="preise">
+    <h2 id="preise">Das gibt es zu gewinnen</h2>
+    <p class="sub">Die Preise gehen an die drei Kränze mit den meisten Stimmen.</p>
+    <ul class="prizes">
+      <li><div class="rank">1.<small>Platz</small></div><p>50-Euro-Gutschein für die Stadtbinderei Hafencity</p></li>
+      <li><div class="rank">2.<small>Platz</small></div><p>Zwei Weihnachtstassen inklusive Glühwein</p></li>
+      <li><div class="rank">3.<small>Platz</small></div><p>Eine Flasche Geldermann Rosé</p></li>
+    </ul>
+  </section>
+
+  <section id="mitmachen" aria-labelledby="mm-h">
+    <div class="stage">
+      <h2 id="mm-h">Hochladen &amp; abstimmen</h2>
+      <p class="sub">Hier lädst du dein Foto hoch und stimmst später ab. Beides läuft über den Dienst PollUnit.</p>
+
+      <div class="loader" id="loader">
+        <p><b>Erst nach deinem Klick</b> wird eine Verbindung zu PollUnit hergestellt. Vorher werden keine Daten dorthin übertragen.</p>
+        <button type="button" class="btn" id="lade">Wettbewerb laden</button>
+      </div>
+      <div id="embed" hidden aria-live="polite"><p class="laden-info">Wettbewerb wird geladen …</p></div>
+      <noscript><p class="hint">Ohne JavaScript geht es hier nicht. Du kannst den Wettbewerb auch direkt bei PollUnit öffnen.</p></noscript>
+
+      <p class="hint">Lieber in einem eigenen Fenster? <a href="https://pollunit.com/de/polls/oVdZ0z66VdtjERFC8HmSyQ" target="_blank" rel="noopener">Wettbewerb direkt bei PollUnit öffnen</a>. Probleme oder Fragen? Schreib uns an <a href="mailto:hallo@marienthal-mittendrin.de">hallo@marienthal-mittendrin.de</a>.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="regeln">
+    <h2 id="regeln">Spielregeln</h2>
+    <p class="sub">Kurz und fair.</p>
+    <ul class="rules">
+      <li>Teilnehmen können alle aus Hamburg-Marienthal. Jede Person lädt einen Kranz hoch.</li>
+      <li>Das Foto muss von dir sein. Mit dem Hochladen bestätigst du das und stimmst zu, dass es hier im Wettbewerb gezeigt wird.</li>
+      <li>Bitte zeige nur den Kranz: keine Personen, keine Hausnummern und keine Straßenschilder.</li>
+      <li>Abgestimmt wird anonym und nur einmal pro Person. Für den eigenen Kranz kann man nicht stimmen.</li>
+      <li>Unpassende Fotos nehmen wir wieder heraus.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="ds">
+    <div class="privacy">
+      <h2 id="ds">Datenschutz in Kürze</h2>
+      <ul>
+        <li><b>Anonym:</b> Wer abstimmt, wird nicht veröffentlicht. Namen und E-Mail-Adressen der Abstimmenden sind für andere nicht sichtbar.</li>
+        <li><b>E-Mail-Adresse:</b> PollUnit fragt sie ab, um deine Stimme zu bestätigen und Mehrfachstimmen zu verhindern. Mehr dazu im <a href="/datenschutz/#adventskranz">Datenschutz</a>.</li>
+        <li><b>Beim Hochladen</b> gibst du einen Namen an, der bei deinem Foto erscheinen kann. Ein Vorname oder Spitzname reicht.</li>
+        <li><b>Anbieter:</b> PollUnit UG (haftungsbeschränkt) aus Herrsching, Server in Deutschland. Die Verbindung entsteht erst, wenn du oben auf „Wettbewerb laden“ klickst. Dabei wird deine IP-Adresse an PollUnit übertragen, und PollUnit kann Cookies setzen.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 marienthal mittendrin · Hamburg-Marienthal</span>
+    <span><a href="/">Startseite</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span>
+  </div>
+</footer>
+</div>
+
+<script>
+(function(){
+  /* ---------- Phase / Status ---------- */
+  var phasen = [
+    {bis:new Date(2026,10,29,12,0), text:"Los geht’s am 29. November"},
+    {bis:new Date(2026,11,15,0,0),  text:"Foto-Upload läuft bis 14. Dezember"},
+    {bis:new Date(2026,11,21,0,0),  text:"Abstimmung läuft bis 20. Dezember"}
+  ];
+  var jetzt = new Date(), text = "Wettbewerb beendet – danke fürs Mitmachen!";
+  for(var i=0;i<phasen.length;i++){ if(jetzt < phasen[i].bis){ text = phasen[i].text; break; } }
+  document.getElementById("status").textContent = text;
+
+  /* ---------- Schneefall (Deko) ---------- */
+  var snow = document.getElementById("snow");
+  if(snow && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    for(var n=0;n<28;n++){
+      var f = document.createElement("i");
+      f.style.left = (Math.random()*100)+"vw";
+      f.style.animationDuration = (9+Math.random()*11)+"s";
+      f.style.animationDelay = (-Math.random()*20)+"s";
+      f.style.width = f.style.height = (3+Math.random()*4)+"px";
+      f.style.opacity = (.25+Math.random()*.45).toFixed(2);
+      snow.appendChild(f);
+    }
+  }
+
+  /* ---------- PollUnit erst nach Klick laden (Datenschutz) ---------- */
+  var SRC = "https://pollunit.com/de/polls/oVdZ0z66VdtjERFC8HmSyQ";
+  var btn = document.getElementById("lade"),
+      loader = document.getElementById("loader"),
+      box = document.getElementById("embed");
+
+  function hatIframe(){ return box.querySelector("iframe"); }
+
+  /* Fallback: schlichter iFrame, falls das offizielle Skript nichts einfügt */
+  function manuell(){
+    if(hatIframe()) return;
+    box.innerHTML = "";
+    var f = document.createElement("iframe");
+    f.src = SRC + "?embed=1&embed_options%5Bkill_background%5D=1&embed_options%5Bkill_title%5D=1";
+    f.title = "Wettbewerb: Der schönste Adventskranz in Marienthal 2026";
+    f.style.height = "min(1100px, 150vh)";
+    f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
+    box.appendChild(f);
+  }
+
+  btn.addEventListener("click", function(){
+    btn.disabled = true;
+    loader.hidden = true;
+    box.hidden = false;
+
+    var d = document.createElement("div");
+    d.setAttribute("data-pollunit-src", SRC);
+    d.setAttribute("data-pollunit-width", "100%");
+    d.setAttribute("data-pollunit-height", "900");
+    d.setAttribute("data-pollunit-options", "autoresize,kill_background,kill_title");
+    box.appendChild(d);
+
+    var s = document.createElement("script");
+    s.src = "https://pollunit.com/embed/v2.1/parent_code.js";
+    s.async = true;
+    s.onload = function(){
+      setTimeout(function(){
+        if(hatIframe()) return;
+        /* Das Skript startet sonst nur bei DOMContentLoaded – hier einmal nachholen */
+        document.dispatchEvent(new Event("DOMContentLoaded"));
+        setTimeout(function(){ if(!hatIframe()) manuell(); }, 1500);
+      }, 1200);
+    };
+    s.onerror = manuell;
+    document.head.appendChild(s);
+  });
+})();
+</script>
+</body>
+</html>
